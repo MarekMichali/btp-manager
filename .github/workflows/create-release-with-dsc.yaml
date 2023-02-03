@@ -1,5 +1,5 @@
 
-name: "Create a release"
+name: "Create my release with dsc"
 
 env:
   BTP_MANAGER_REPO: docker://europe-docker.pkg.dev/kyma-project/prod/btp-manager
