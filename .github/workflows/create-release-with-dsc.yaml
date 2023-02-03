@@ -20,6 +20,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - name: Generate Changelog
+        run: |
+          CHANGELOG=$(git log --pretty=format: '%h %s' --no-merges $(git describe --tags --abbrev=0 HEAD^)..HEAD)
+          RELEASE_DESCRIPTION="Changes in this Release\n\n$CHANGELOG"
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -28,9 +32,7 @@ jobs:
         with:
           tag_name: ${{ github.event.inputs.name }}
           release_name: Release ${{ github.event.inputs.name }}
-          body: |
-            Changes in this Release
-              - TBD
+          body: ${{ env.RELEASE_DESCRIPTION}}
           draft: false
           prerelease: false
    
