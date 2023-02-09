@@ -27,10 +27,12 @@ jobs:
         run: |
           git describe --tags --abbrev=0
           LATEST_RELEASE=$(git describe --tags $(git rev-list --tags --max-count=1))
-          git log 0.0.19.1..0.0.19.2 --pretty=format:"%h" > CHANGELOG.md
+          git log 0.0.19.1..0.0.19.2 --pretty=format:"%h" > COMMITS.md
+          while read -r line; do
+          git log --pretty=format:"%h %s" main | grep "$line" | grep -o " (#[0-9]\+)" | grep -o "[0-9]\+" | awk '{print "in https://github.com/kyma-project/btp-manager/pull/" $1}' > CHANGELOG.md
+          done < "COMMITS.md"
           while read -r line; do
           echo "$line"
-          git log --pretty=format:"%h %s" main | grep "$line" | grep -o " (#[0-9]\+)" | grep -o "[0-9]\+" | awk '{print "in https://github.com/kyma-project/btp-manager/pull/" $1}'
           done < "CHANGELOG.md"
          # git log $LATEST_RELEASE..HEAD --pretty=format:"* %s by %an in %h " > CHANGELOG.md
         #  git log $LATEST_RELEASE..HEAD --pretty=format:"* %s by %an in %h "
