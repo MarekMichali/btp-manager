@@ -20,9 +20,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          submodules: true
+          fetch-depth: 0
       - name: Generate Changelog
         run: |
-          git fetch origin refs/tags/$TAG
           git describe --tags --abbrev=0
           LATEST_RELEASE=$(git describe --tags $(git rev-list --tags --max-count=1))
           git log $LATEST_RELEASE..HEAD --pretty=format:"* %s by %an in %h " > CHANGELOG.md
