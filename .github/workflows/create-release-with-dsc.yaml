@@ -28,6 +28,7 @@ jobs:
           git describe --tags --abbrev=0
           LATEST_RELEASE=$(git describe --tags $(git rev-list --tags --max-count=1))
           git log $LATEST_RELEASE..HEAD --pretty=format:"* %s by %an in %h " > CHANGELOG.md
+          git log $LATEST_RELEASE..HEAD --pretty=format:"* %s by %an in %h "
     #  - name: Create Release
      #   id: create_release
       #  uses: actions/create-release@v1
