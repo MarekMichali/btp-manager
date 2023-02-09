@@ -22,7 +22,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Generate Changelog
         run: |
-          git checkout main
+          git describe --tags
           LATEST_RELEASE=$(git describe --tags $(git rev-list --tags --max-count=1))
           git log $LATEST_RELEASE..HEAD --pretty=format:"* %s by %an in %h " > CHANGELOG.md
     #  - name: Create Release
