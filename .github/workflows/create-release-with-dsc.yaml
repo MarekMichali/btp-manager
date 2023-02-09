@@ -1,9 +1,9 @@
 
 name: "Create my release with dsc"
 
-env:
-  BTP_MANAGER_REPO: docker://europe-docker.pkg.dev/kyma-project/prod/btp-manager
-  BTP_OPERATOR_REPO: docker://europe-docker.pkg.dev/kyma-project/prod/unsigned/component-descriptors/kyma.project.io/module/btp-operator
+#env:
+ # BTP_MANAGER_REPO: docker://europe-docker.pkg.dev/kyma-project/prod/btp-manager
+  #BTP_OPERATOR_REPO: docker://europe-docker.pkg.dev/kyma-project/prod/unsigned/component-descriptors/kyma.project.io/module/btp-operator
 
 on:
   workflow_dispatch:
