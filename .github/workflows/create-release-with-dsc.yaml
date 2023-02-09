@@ -23,7 +23,7 @@ jobs:
       - name: Generate Changelog
         run: |
           LATEST_RELEASE=$(git describe --tags $(git rev-list --tags --max-count=1))
-          git log $LATEST_TAG..HEAD --pretty=format:"* %s by %an in %h " > CHANGELOG.md
+          git log $LATEST_RELEASE..HEAD --pretty=format:"* %s by %an in %h " > CHANGELOG.md
     #  - name: Create Release
      #   id: create_release
       #  uses: actions/create-release@v1
