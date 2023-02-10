@@ -37,19 +37,15 @@ jobs:
           while read -r line; do
           echo "$line"
           done < "CHANGELOG.md"
-         # git log $LATEST_RELEASE..HEAD --pretty=format:"* %s by %an in %h " > CHANGELOG.md
-        #  git log $LATEST_RELEASE..HEAD --pretty=format:"* %s by %an in %h "
-    #  - name: Create Release
-     #   id: create_release
-      #  uses: actions/create-release@v1
-       # env:
-        #  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        #with:
-         # tag_name: ${{ github.event.inputs.name }}
-          #release_name: Release ${{ github.event.inputs.name }}
-          #body: |
-           # Changes in this Release
-            #  - TBD
-          #draft: false
-          #prerelease: false
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.event.inputs.name }}
+          release_name: Release ${{ github.event.inputs.name }}
+          body_file: CHANGELOG.md
+          draft: false
+          prerelease: false
    
