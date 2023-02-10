@@ -31,7 +31,6 @@ jobs:
 
           for line in "${COMMITS[@]}"; do
           git log 0.0.19.1..0.0.19.2 --pretty=format:"* %s by %an %h " | grep "$line" | awk '{$NF=""; print $0}' >> CHANGELOG.md
-          git log --pretty=format:"%h %s" main | grep "$line" | grep -o " (#[0-9]\+)" | grep -o "[0-9]\+" | awk '{print "in https://github.com/kyma-project/btp-manager/pull/" $1}' >> CHANGELOG.md
           done
           
           while read -r line; do
