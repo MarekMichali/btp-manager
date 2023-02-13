@@ -48,9 +48,15 @@ jobs:
             RELEASE_CONTRIBUTORS+=("$line")
           done < <(curl -H "Authorization: token $GITHUB_TOKEN" -s "https://api.github.com/repos/MarekMichali/btp-manager/compare/0.0.19.1...HEAD" | jq -r '.commits[].author.login' | sort -u)
 
+          NEW_CONTRIBUTORS=false
           for i in "${RELEASE_CONTRIBUTORS[@]}"; do
+
             if [[ ! " ${CONTRIBUTORS_BEFORE_NEW_RELEASE[@]} " =~ " ${i} " ]]; then
-              echo "$i"
+              if [ "$NEW_CONTRIBUTORS" = false ] ; then
+                echo -e "\n ## New Contributors" >> CHANGELOG.md
+                NEW_CONTRIBUTORS=true
+              fi
+              echo "$i made their first contribution" >> CHANGELOG.md
             fi
           done
       - name: Create Release
