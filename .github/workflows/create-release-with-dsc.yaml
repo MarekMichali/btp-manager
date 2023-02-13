@@ -31,7 +31,7 @@ jobs:
 
           for line in "${COMMITS[@]}"; do
           git log 0.0.19.1..0.0.19.2 --pretty=format:"* %s by @ %h" | grep "$line" | awk '{$NF=""; print $0}' | tr -d "\n" | sed 's/.$//' >> CHANGELOG.md
-          curl https://api.github.com/repos/\MarekMichali/\btp-manager/commits/$line | jq -r '.author.login'  >> CHANGELOG.md
+          curl https://api.github.com/repos/\MarekMichali/\btp-manager/commits/$line | jq -r '.author.login' >> CHANGELOG.md
           done
           
           while read -r line; do
