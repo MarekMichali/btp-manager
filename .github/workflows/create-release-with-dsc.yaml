@@ -37,7 +37,7 @@ jobs:
             curl -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/\MarekMichali/\btp-manager/commits/$line | jq -r '.author.login' >> CHANGELOG.md
           done
           echo "## What's Changed" >> CHANGELOG.md
-          tac CHANGELOG.md > CHANGELOG.md
+          tail -r CHANGELOG.md
           
           CONTRIBUTORS_BEFORE_NEW_RELEASE=()
           while IFS= read -r line; do
