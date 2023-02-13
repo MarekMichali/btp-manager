@@ -57,7 +57,8 @@ jobs:
                 echo -e "\n## New Contributors" >> CHANGELOG.md
                 NEW_CONTRIBUTORS=true
               fi
-              echo "@$i made their first contribution" >> CHANGELOG.md
+              echo "@$i made their first contribution" | tr -d "\n" >> CHANGELOG.md
+              grep @$i CHANGELOG.md | head -1 | awk '{$(NF-=2); print $0}' >> CHANGELOG.md
             fi
           done
 
