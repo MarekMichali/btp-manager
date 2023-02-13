@@ -24,6 +24,8 @@ jobs:
           submodules: true
           fetch-depth: 0
       - name: Generate Changelog
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           curl -I https://api.github.com/users/octocat/orgs
           git describe --tags --abbrev=0
