@@ -60,7 +60,7 @@ jobs:
             fi
           done
 
-          echo -e "\n**Full Changelog**: https://github.com/kyma-project/btp-manager/compare/0.0.19.1...0.0.19.12" >> CHANGELOG.md
+          echo -e "\n**Full Changelog**: https://github.com/MarekMichali/btp-manager/compare/0.0.19.1...0.0.19.12" >> CHANGELOG.md
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
