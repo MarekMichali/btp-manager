@@ -25,6 +25,7 @@ jobs:
           fetch-depth: 0
       - name: Generate Changelog
         run: |
+          curl -I https://api.github.com/users/octocat/orgs
           git describe --tags --abbrev=0
           LATEST_RELEASE=$(git describe --tags $(git rev-list --tags --max-count=1))         
           COMMITS=($(git log 0.0.19.1..0.0.19.2 --pretty=format:"%h"))
