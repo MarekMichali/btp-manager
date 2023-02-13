@@ -58,7 +58,7 @@ jobs:
                 NEW_CONTRIBUTORS=true
               fi
               echo "* @szwedm made their first contribution in " | tr -d "\n" >> CHANGELOG.md
-              grep @szwedm CHANGELOG.md | head -1 | cut -d ' ' -f 2- | awk '{$(NF-=2); print $0}' >> CHANGELOG.md
+              grep @szwedm CHANGELOG.md | head -1 | grep -o " (#[0-9]\+)" >> CHANGELOG.md
             fi
           done
 
