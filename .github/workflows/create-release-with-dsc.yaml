@@ -28,7 +28,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           LATEST_RELEASE=$(curl -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/MarekMichali/btp-manager/releases/latest | jq -r '.tag_name')        
-          COMMITS=($(git log $LATEST_RELEASE..HEAD --pretty=format:"%h"))
+          COMMITS=$(git log $LATEST_RELEASE..HEAD --pretty=format:"%h")
      
           for line in "${COMMITS[@]}"; do
             git log $LATEST_RELEASE..HEAD --pretty=format:"* %s by @ %h" | grep "$line" | awk '{$NF=""; print $0}' | tr -d "\n" | sed 's/.$//' >> CHANGELOG.txt
@@ -59,7 +59,7 @@ jobs:
             fi
           done
 
-          echo -e "\n**Full Changelog**: https://github.com/MarekMichali/btp-manager/compare/0.0.19.1...0.0.19.12" >> CHANGELOG.md
+          echo -e "\n**Full Changelog**: https://github.com/MarekMichali/btp-manager/compare/$(git rev-list --max-parents=0 HEAD)...${{ github.event.inputs.name }}" >> CHANGELOG.md
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
