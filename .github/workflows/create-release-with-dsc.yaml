@@ -30,7 +30,7 @@ jobs:
           REPOSITORY='MarekMichali/btp-manager'
           LATEST_RELEASE_TAG=$(curl -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/$REPOSITORY/releases/latest | jq -r '.tag_name')        
           COMMITS_SINCE_LAST_RELEASE=$(git log $LATEST_RELEASE_TAG..HEAD --pretty=format:"%h")
-              d
+              
           for line in "${COMMITS_SINCE_LAST_RELEASE[@]}"; do
             HASH="$line" | set "s/ //g"
             git log $LATEST_RELEASE_TAG..HEAD --pretty=format:"* %s by @ %h" | grep "$line" | awk '{$NF=""; print $0}' | tr -d "\n" | sed 's/.$//' >> CHANGELOG.txt
