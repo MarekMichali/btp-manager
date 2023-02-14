@@ -33,8 +33,7 @@ jobs:
               
           for line in "${COMMITS_SINCE_LAST_RELEASE[@]}"; do
             HASH=${line//[[:blank:]]/}
-            s
-            git log $LATEST_RELEASE_TAG..HEAD --pretty=format:"* %s by @ %h" | grep "$line" | awk '{$NF=""; print $0}' | tr -d "\n" | sed 's/.$//' >> CHANGELOG.txt
+            git log $LATEST_RELEASE_TAG..HEAD --pretty=format:"* %s by @ %h" | grep "$HASH" | awk '{$NF=""; print $0}' | tr -d "\n" | sed 's/.$//' >> CHANGELOG.txt
             curl -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/$REPOSITORY/commits/$HASH | jq -r '.author.login' >> CHANGELOG.txt
           done
           echo "## What's Changed" >> CHANGELOG.md
