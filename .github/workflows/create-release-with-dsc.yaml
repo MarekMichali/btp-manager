@@ -27,8 +27,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          LATEST_RELEASE=$(curl -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/MarekMichali/btp-manager/releases/latest | jq -r '.tag_name')    
-          echo "$LATEST_RELEASE"     
+          LATEST_RELEASE=$(curl -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/MarekMichali/btp-manager/releases/latest | jq -r '.tag_name')        
           COMMITS=($(git log 0.0.19.1..0.0.19.2 --pretty=format:"%h"))
      
           for line in "${COMMITS[@]}"; do
