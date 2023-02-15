@@ -36,8 +36,9 @@ jobs:
             curl -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/$REPOSITORY/commits/$line | jq -r '.author.login' >> CHANGELOG.txt
           done
           echo "## What's Changed" >> CHANGELOG.md
-          tac CHANGELOG.txt >> CHANGELOG.md
-          
+          if [ -e CHANGELOG.txt ]; then
+            tac CHANGELOG.txt >> CHANGELOG.md
+          fi
           CONTRIBUTORS_BEFORE_NEW_RELEASE=()
           while IFS= read -r line; do
             CONTRIBUTORS_BEFORE_NEW_RELEASE+=("$line")
