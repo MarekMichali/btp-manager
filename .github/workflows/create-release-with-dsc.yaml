@@ -41,12 +41,12 @@ jobs:
           CONTRIBUTORS_BEFORE_NEW_RELEASE=()
           while IFS= read -r line; do
             CONTRIBUTORS_BEFORE_NEW_RELEASE+=("$line")
-          done < curl -H "Authorization: token $GITHUB_TOKEN" -s "https://api.github.com/repos/$REPOSITORY/compare/$(git rev-list --max-parents=0 HEAD)...$LATEST_RELEASE_TAG" | jq -r '.commits[].author.login' | sort -u
+          done < <(curl -H "Authorization: token $GITHUB_TOKEN" -s "https://api.github.com/repos/$REPOSITORY/compare/$(git rev-list --max-parents=0 HEAD)...$LATEST_RELEASE_TAG" | jq -r '.commits[].author.login' | sort -u)
 
           RELEASE_CONTRIBUTORS=()
           while IFS= read -r line; do
             RELEASE_CONTRIBUTORS+=("$line")
-          done < curl -H "Authorization: token $GITHUB_TOKEN" -s "https://api.github.com/repos/$REPOSITORY/compare/$LATEST_RELEASE_TAG...HEAD" | jq -r '.commits[].author.login' | sort -u
+          done < <(curl -H "Authorization: token $GITHUB_TOKEN" -s "https://api.github.com/repos/$REPOSITORY/compare/$LATEST_RELEASE_TAG...HEAD" | jq -r '.commits[].author.login' | sort -u)
 
           NEW_CONTRIBUTORS=false
           for i in "${RELEASE_CONTRIBUTORS[@]}"; do
