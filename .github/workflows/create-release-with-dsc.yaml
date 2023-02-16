@@ -45,7 +45,7 @@ jobs:
 
           if [ -s NEW_CONTRIBUTORS.txt ]; then
               echo -e "\n## New Contributors" >> CHANGELOG.md
-              echo -n "* @szwedm made their first contribution in "" >> CHANGELOG.md
+              echo -n "* @szwedm made their first contribution in " >> CHANGELOG.md
               grep @szwedm CHANGELOG.md | head -1 | grep -o " (#[0-9]\+)" >> CHANGELOG.md
               while read line; do
                 echo -n "* @$line made their first contribution in " >> CHANGELOG.md
