@@ -45,10 +45,11 @@ jobs:
 
           if [ -s NEW_CONTRIBUTORS.txt ]; then
               echo -e "\n## New Contributors" >> CHANGELOG.md
+              while read line; do
+                echo "* @$line made their first contribution in $(grep @$line CHANGELOG.md | head -1 | grep -o " (#[0-9]\+)")" >> CHANGELOG.md
+              done < NEW_CONTRIBUTORS.txt
           fi
-          while read line; do
-            echo "* @$line made their first contribution in $(grep @$line CHANGELOG.md | head -1 | grep -o " (#[0-9]\+)")" >> CHANGELOG.md
-          done < file.txt
+          
           echo -e "\n**Full Changelog**: https://github.com/$REPOSITORY/compare/$(git rev-list --max-parents=0 HEAD)...${{ github.event.inputs.name }}" >> CHANGELOG.md
       - name: Create Release
         id: create_release
