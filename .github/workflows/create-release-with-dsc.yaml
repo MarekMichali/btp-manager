@@ -27,7 +27,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           REPOSITORY='MarekMichali/btp-manager'
-          LATEST_RELEASE_TAG=$(curl -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/$REPOSITORY/releases/latest | jq -r '.tag_name')        
+          LATEST_RELEASE_TAG=0.0.19.1       
           COMMITS_SINCE_LATEST_RELEASE=($(git log $LATEST_RELEASE_TAG..HEAD --pretty=format:"%h"))
               
           for line in "${COMMITS_SINCE_LATEST_RELEASE[@]}"; do
@@ -45,6 +45,7 @@ jobs:
 
           if [ -s NEW_CONTRIBUTORS.txt ]; then
               echo -e "\n## New Contributors" >> CHANGELOG.md
+              echo "* @szwedm made their first contribution in $(grep @$line CHANGELOG.md | head -1 | grep -o " (#[0-9]\+)")" >> CHANGELOG.md
               while read line; do
                 echo "* @$line made their first contribution in $(grep @$line CHANGELOG.md | head -1 | grep -o " (#[0-9]\+)")" >> CHANGELOG.md
               done < NEW_CONTRIBUTORS.txt
