@@ -48,8 +48,7 @@ jobs:
               echo "* @szwedm made their first contribution in " | tr -d "\n" >> CHANGELOG.md
               grep @szwedm CHANGELOG.md | head -1 | grep -o " (#[0-9]\+)" >> CHANGELOG.md
               while read line; do
-                echo "* @$i made their first contribution in " | tr -d "\n" >> CHANGELOG.md
-                grep @$i CHANGELOG.md | head -1 | grep -o " (#[0-9]\+)" >> CHANGELOG.md
+                echo "* @$line made their first contribution in $(grep @$line CHANGELOG.md | head -1 | grep -o " (#[0-9]\+)")"
               done < NEW_CONTRIBUTORS.txt
           fi
           
