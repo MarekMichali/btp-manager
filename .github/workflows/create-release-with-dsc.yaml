@@ -38,28 +38,17 @@ jobs:
           if [ -e CHANGELOG.txt ]; then
             tac CHANGELOG.txt >> CHANGELOG.md
           fi
-          CONTRIBUTORS_BEFORE_NEW_RELEASE=()
-          while IFS= read -r line; do
-            CONTRIBUTORS_BEFORE_NEW_RELEASE+=("$line")
-          done < <(curl -H "Authorization: token $GITHUB_TOKEN" -s "https://api.github.com/repos/$REPOSITORY/compare/$(git rev-list --max-parents=0 HEAD)...$LATEST_RELEASE_TAG" | jq -r '.commits[].author.login' | sort -u)
 
-          RELEASE_CONTRIBUTORS=()
-          while IFS= read -r line; do
-            RELEASE_CONTRIBUTORS+=("$line")
-          done < <(curl -H "Authorization: token $GITHUB_TOKEN" -s "https://api.github.com/repos/$REPOSITORY/compare/$LATEST_RELEASE_TAG...HEAD" | jq -r '.commits[].author.login' | sort -u)
+          curl -s "https://api.github.com/repos/$REPOSITORY/compare/$(git rev-list --max-parents=0 HEAD)...$LATEST_RELEASE_TAG" | jq -r '.commits[].author.login' | sort -u >CONTRIBUTORS_BEFORE_NEW_RELEASE.txt
+          curl -s "https://api.github.com/repos/$REPOSITORY/compare/$LATEST_RELEASE_TAG...HEAD" | jq -r '.commits[].author.login' | sort -u >RELEASE_CONTRIBUTORS.txt
+          join -v2 CONTRIBUTORS_BEFORE_NEW_RELEASE.txt RELEASE_CONTRIBUTORS.txt >NEW_CONTRIBUTORS.txt
 
-          NEW_CONTRIBUTORS=false
-          for i in "${RELEASE_CONTRIBUTORS[@]}"; do
-            if [[ ! " ${CONTRIBUTORS_BEFORE_NEW_RELEASE[@]} " =~ " ${i} " ]]; then
-              if [ "$NEW_CONTRIBUTORS" = false ] ; then
-                echo -e "\n## New Contributors" >> CHANGELOG.md
-                NEW_CONTRIBUTORS=true
-              fi
-              echo "* @$i made their first contribution in " | tr -d "\n" >> CHANGELOG.md
-              grep @$i CHANGELOG.md | head -1 | grep -o " (#[0-9]\+)" >> CHANGELOG.md
-            fi
-          done
-
+          if [ -s NEW_CONTRIBUTORS.txt ]; then
+              echo -e "\n## New Contributors" >> CHANGELOG.md
+          fi
+          while read line; do
+            echo "* @$line made their first contribution in $(grep @$line CHANGELOG.md | head -1 | grep -o " (#[0-9]\+)")" >> CHANGELOG.md
+          done < file.txt
           echo -e "\n**Full Changelog**: https://github.com/$REPOSITORY/compare/$(git rev-list --max-parents=0 HEAD)...${{ github.event.inputs.name }}" >> CHANGELOG.md
       - name: Create Release
         id: create_release
