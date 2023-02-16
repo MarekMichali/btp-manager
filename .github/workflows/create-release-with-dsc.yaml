@@ -28,7 +28,7 @@ jobs:
         run: |
           REPOSITORY='MarekMichali/btp-manager'
           LATEST_RELEASE_TAG=0.0.19.1       
-          COMMITS_SINCE_LATEST_RELEASE=($(git log $LATEST_RELEASE_TAG..HEAD --pretty=format:"%h"))
+          COMMITS_SINCE_LATEST_RELEASE=($(git log $LATEST_RELEASE_TAG..0.0.19.2 --pretty=format:"%h"))
               
           for line in "${COMMITS_SINCE_LATEST_RELEASE[@]}"; do
             git log $LATEST_RELEASE_TAG..HEAD --pretty=format:"* %s by @ %h" | grep "$line" | awk '{$NF=""; print $0}' | tr -d "\n" | sed 's/.$//' >> CHANGELOG.txt
@@ -40,7 +40,7 @@ jobs:
           fi
 
           curl -s "https://api.github.com/repos/$REPOSITORY/compare/$(git rev-list --max-parents=0 HEAD)...$LATEST_RELEASE_TAG" | jq -r '.commits[].author.login' | sort -u >CONTRIBUTORS_BEFORE_NEW_RELEASE.txt
-          curl -s "https://api.github.com/repos/$REPOSITORY/compare/$LATEST_RELEASE_TAG...HEAD" | jq -r '.commits[].author.login' | sort -u >RELEASE_CONTRIBUTORS.txt
+          curl -s "https://api.github.com/repos/$REPOSITORY/compare/$LATEST_RELEASE_TAG...0.0.19.2" | jq -r '.commits[].author.login' | sort -u >RELEASE_CONTRIBUTORS.txt
           join -v2 CONTRIBUTORS_BEFORE_NEW_RELEASE.txt RELEASE_CONTRIBUTORS.txt >NEW_CONTRIBUTORS.txt
 
           if [ -s NEW_CONTRIBUTORS.txt ]; then
@@ -49,7 +49,7 @@ jobs:
               grep @szwedm CHANGELOG.md | head -1 | grep -o " (#[0-9]\+)" >> CHANGELOG.md
               while read line; do
                 echo "* @$line made their first contribution in " | tr -d "\n" >> CHANGELOG.md
-                grep @$line CHANGELOG.md | head -1 | grep -o " (#[0-9]\+)" >> CHANGELOG.md
+                grep @szwedm CHANGELOG.md | head -1 | grep -o " (#[0-9]\+)" >> CHANGELOG.md
               done < NEW_CONTRIBUTORS.txt
           fi
           
