@@ -49,7 +49,7 @@ jobs:
               grep @szwedm CHANGELOG.md | head -1 | grep -o " (#[0-9]\+)" >> CHANGELOG.md
               while read line; do
                 echo "* @$line made their first contribution in " | tr -d "\n" >> CHANGELOG.md
-                grep @$line CHANGELOG.md | head -1 | grep -o " (#[0-9]\+)" >> CHANGELOG.md
+                grep @szwedm CHANGELOG.md | head -1 | grep -o " (#[0-9]\+)" >> CHANGELOG.md
               done < NEW_CONTRIBUTORS.txt
           fi
           
