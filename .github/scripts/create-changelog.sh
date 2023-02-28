@@ -34,4 +34,4 @@ NEW_CONTRIBUTORS=false
             grep @$i CHANGELOG.md | head -1 | grep -o " (#[0-9]\+)" >> CHANGELOG.md
         fi
     done
-echo -e "\n**Full Changelog**: https://github.com/$REPOSITORY/compare/$LATEST_RELEASE_TAG...${{ github.event.inputs.name }}" >> CHANGELOG.md
+echo -e "\n**Full Changelog**: https://github.com/$REPOSITORY/compare/$LATEST_RELEASE_TAG...$RELEASE_TAG" >> CHANGELOG.md
