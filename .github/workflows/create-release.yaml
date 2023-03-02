@@ -23,7 +23,6 @@ jobs:
         with:
           fetch-depth: 0
       - name: Create changelog
-        working-directory: scripts
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_TAG: ${{ github.event.inputs.name }}
