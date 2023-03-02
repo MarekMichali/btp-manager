@@ -13,7 +13,7 @@ set -o pipefail # prevents errors in a pipeline from being masked
 # Expected variables:
 #             GITHUB_TOKEN - github authorization token
 
-REPOSITORY="kyma-project/btp-manager"
+REPOSITORY="MarekMichali/btp-manager"
 RELEASE_TAG=$1
 CHANGELOG_FILENAME="CHANGELOG.md"
 LATEST_RELEASE_TAG=$(curl -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/$REPOSITORY/releases/latest | jq -r '.tag_name')
