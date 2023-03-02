@@ -23,16 +23,11 @@ jobs:
         with:
           fetch-depth: 0
       - name: Create changelog
+        working-directory: scripts
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_TAG: ${{ github.event.inputs.name }}
-        run: |
-          ls
-          cd ..
-          ls
-          cd ..
-          ls
-          scripts/create_changelog.sh
+        run: bash create_changelog.sh
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
