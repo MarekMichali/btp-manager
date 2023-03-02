@@ -10,7 +10,7 @@ for line in "${COMMITS_SINCE_LATEST_RELEASE[@]}"; do
 done
 echo "## What's Changed" >> CHANGELOG.md
 if [ -e CHANGELOG.txt ]; then
-    tail -r CHANGELOG.txt >> CHANGELOG.md
+    tail -r CHANGELOG.txt > CHANGELOG.md
 fi
 
 CONTRIBUTORS_BEFORE_NEW_RELEASE=()
