@@ -28,6 +28,8 @@ jobs:
           RELEASE_TAG: ${{ github.event.inputs.name }}
         run: |
           ls
+          cd scripts
+          ls
           chmod +x scripts/create_changelog.sh
           scripts/create_changelog.sh
       - name: Create Release
