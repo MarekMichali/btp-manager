@@ -30,7 +30,6 @@ jobs:
           ls
           cd scripts
           ls
-          chmod +x scripts/create_changelog.sh
           scripts/create_changelog.sh
       - name: Create Release
         id: create_release
