@@ -1,37 +1,52 @@
-#! /bin/bash
+#!/usr/bin/env bash
 
-REPOSITORY='MarekMichali/btp-manager'
-LATEST_RELEASE_TAG=$(curl -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/$REPOSITORY/releases/latest | jq -r '.tag_name')        
-COMMITS_SINCE_LATEST_RELEASE=($(git log $LATEST_RELEASE_TAG..HEAD --pretty=format:"%h"))
-              
-for line in "${COMMITS_SINCE_LATEST_RELEASE[@]}"; do
-    git log $LATEST_RELEASE_TAG..HEAD --pretty=format:"* %s by @ %h" | grep "$line" | awk '{$NF=""; print $0}' | tr -d "\n" | sed 's/.$//' >> CHANGELOG.txt
-    curl -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/$REPOSITORY/commits/$line | jq -r '.author.login' >> CHANGELOG.txt
-done
-echo "## What's Changed" >> CHANGELOG.md
-if [ -e CHANGELOG.txt ]; then
-    tac CHANGELOG.txt >> CHANGELOG.md
+# standard bash error handling
+set -o nounset  # treat unset variables as an error and exit immediately.
+set -o errexit  # exit immediately when a command fails.
+set -E          # needs to be set if we want the ERR trap
+set -o pipefail # prevents errors in a pipeline from being masked
+
+# This script has the following argument: new release tag
+#
+# ./create_changelog.sh 1.1.0
+
+# Expected variables:
+#             GITHUB_TOKEN - github authorization token
+
+REPOSITORY="kyma-project/btp-manager"
+RELEASE_TAG=$1
+CHANGELOG_FILENAME="CHANGELOG.md"
+LATEST_RELEASE_TAG=$(curl -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/$REPOSITORY/releases/latest | jq -r '.tag_name')
+
+# temp files
+OLD_CONTRIB=$$.old
+REL_CONTRIB=$$.rel
+NEW_CONTRIB=$$.new
+
+# TODO use %al?
+echo "## What's changed" >> ${CHANGELOG_FILENAME}
+
+git log ${LATEST_RELEASE_TAG}..HEAD --pretty=format:"* %s by @%an" | grep -v "^$" >> ${CHANGELOG_FILENAME}
+git log ${LATEST_RELEASE_TAG} --pretty=format:"%an"|sort -u > ${OLD_CONTRIB}
+git log ${LATEST_RELEASE_TAG}..HEAD --pretty=format:"%an"|sort -u > ${REL_CONTRIB}
+
+join -v2 ${OLD_CONTRIB} ${REL_CONTRIB} >${NEW_CONTRIB}
+
+if [ -s ${NEW_CONTRIB} ]
+then
+  echo -e "\n## New contributors" >> ${CHANGELOG_FILENAME}
+  while read -r user
+  do
+    REF_PR=$(grep "@$user" ${CHANGELOG_FILENAME} | head -1 | grep -o " (#[0-9]\+)" || true)
+    if [ -n "${REF_PR}" ] #reference found
+    then
+      REF_PR=" in ${REF_PR}"
+    fi
+    echo "* @$user made first contribution${REF_PR}" >> ${CHANGELOG_FILENAME}
+  done <${NEW_CONTRIB}
 fi
 
-CONTRIBUTORS_BEFORE_NEW_RELEASE=()
-while IFS= read -r line; do
-    CONTRIBUTORS_BEFORE_NEW_RELEASE+=("$line")
-done < <(curl -H "Authorization: token $GITHUB_TOKEN" -s "https://api.github.com/repos/$REPOSITORY/compare/$(git rev-list --max-parents=0 HEAD)...$LATEST_RELEASE_TAG" | jq -r '.commits[].author.login' | sort -u)
+echo -e "\n**Full changelog**: https://github.com/$REPOSITORY/compare/$(git rev-list --max-parents=0 HEAD)...${RELEASE_TAG}" >> ${CHANGELOG_FILENAME}
 
-RELEASE_CONTRIBUTORS=()
-while IFS= read -r line; do
-    RELEASE_CONTRIBUTORS+=("$line")
-done < <(curl -H "Authorization: token $GITHUB_TOKEN" -s "https://api.github.com/repos/$REPOSITORY/compare/$LATEST_RELEASE_TAG...HEAD" | jq -r '.commits[].author.login' | sort -u)
-
-NEW_CONTRIBUTORS=false
-    for i in "${RELEASE_CONTRIBUTORS[@]}"; do
-        if [[ ! " ${CONTRIBUTORS_BEFORE_NEW_RELEASE[@]} " =~ " ${i} " ]]; then
-            if [ "$NEW_CONTRIBUTORS" = false ] ; then
-                echo -e "\n## New Contributors" >> CHANGELOG.md
-                NEW_CONTRIBUTORS=true
-            fi
-            echo "* @$i made their first contribution in " | tr -d "\n" >> CHANGELOG.md
-            grep @$i CHANGELOG.md | head -1 | grep -o " (#[0-9]\+)" >> CHANGELOG.md
-        fi
-    done
-echo -e "\n**Full Changelog**: https://github.com/$REPOSITORY/compare/$LATEST_RELEASE_TAG...$RELEASE_TAG" >> CHANGELOG.md
+# cleanup
+rm ${OLD_CONTRIB} ${NEW_CONTRIB} ${REL_CONTRIB} || echo "cleaned up"
