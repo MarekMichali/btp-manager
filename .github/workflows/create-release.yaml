@@ -30,7 +30,7 @@ jobs:
           ls
           cd scripts
           ls
-          ${GITHUB_WORKSPACE}/scripts/create_changelog.sh
+          ../scripts/create_changelog.sh
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
