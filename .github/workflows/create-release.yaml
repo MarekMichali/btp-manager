@@ -26,10 +26,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_TAG: ${{ github.event.inputs.name }}
-        run: |
-          cd scripts
-          ls
-          bash scripts/create_changelog.sh
+        run: scripts/create-changelog.sh
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
