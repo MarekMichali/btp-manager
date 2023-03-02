@@ -27,6 +27,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_TAG: ${{ github.event.inputs.name }}
         run: |
+          ls
           chmod +x scripts/create_changelog.sh
           scripts/create_changelog.sh
       - name: Create Release
