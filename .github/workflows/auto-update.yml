@@ -44,7 +44,7 @@ jobs:
       - name: Create PR if anything changed
         if: env.CONTINUE_JOB == 'true'
         env:
-          GH_TOKEN: ${{ secrets.BOT_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           prs=$(gh pr list -A $GIT_NAME --state open --json headRefName | jq -r '.[] | .headRefName')
           if echo $prs | tr " " '\n' | grep -F -q -x $BRANCH_NAME; then
