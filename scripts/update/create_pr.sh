@@ -50,12 +50,12 @@ pr_link=$(gh pr create -B main --title "${MSG}" --body "https://${SAP_BTP_SERVIC
 echo "Link for created PR: ${pr_link}"
 
 pr_number=$(echo "${pr_link}" | awk -F '/' '{print($NF)}')
-pr_id=$(gh api repos/kyma-project/btp-manager/pulls/"${pr_number}" | jq -r '.node_id')
+pr_id=$(gh api repos/MarekMichali/btp-manager/pulls/"${pr_number}" | jq -r '.node_id')
 
-# Gopher board node_id
-readonly project_board_id=PVT_kwDOAlVvc84AEv0v
-# "To Do" column on Gopher board node_id
-readonly todo_column_id=834c7033
+# Gopher board node_id MM
+readonly project_board_id=PVT_kwHOA1j9cM4APn2j
+# "To Do" column on Gopher board node_id MM
+readonly todo_column_id=f75ad846
 # order in "To Do" column on Gopher board node_id
 readonly status_field=PVTSSF_lADOAlVvc84AEv0vzgCvCtY
 
@@ -67,20 +67,20 @@ card_id=$(echo "$resp" | jq -r '.data.addProjectV2ItemById.item.id')
 # move projectv2 item (card on the gopher board) to the top of the "To Do" column
 # due to GitHub internal GraphQL limitation, adding item and update has to be two separate calls
 # https://docs.github.com/en/issues/planning-and-tracking-with-projects/automating-your-project/using-the-api-to-manage-projects#updating-projects
-gh api graphql -f query="$(cat << EOF
-  mutation {
-    set_status: updateProjectV2ItemFieldValue(input: {
-      projectId: "$project_board_id"
-      itemId: "$card_id"
-      fieldId: "$status_field"
-      value: {
-        singleSelectOptionId: "$todo_column_id"
-      }
-    }){projectV2Item {id}}
-    set_position: updateProjectV2ItemPosition(input: {
-      projectId: "$project_board_id"
-      itemId: "$card_id"
-    }){items {totalCount}}
-  }
-EOF
-)"
+#gh api graphql -f query="$(cat << EOF
+#  mutation {
+#    set_status: updateProjectV2ItemFieldValue(input: {
+#      projectId: "$project_board_id"
+#      itemId: "$card_id"
+#      fieldId: "$status_field"
+#      value: {
+#        singleSelectOptionId: "$todo_column_id"
+#      }
+#    }){projectV2Item {id}}
+#    set_position: updateProjectV2ItemPosition(input: {
+#      projectId: "$project_board_id"
+#      itemId: "$card_id"
+#    }){items {totalCount}}
+#  }
+#EOF
+#)"
