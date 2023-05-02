@@ -52,10 +52,10 @@ echo "Link for created PR: ${pr_link}"
 pr_number=$(echo "${pr_link}" | awk -F '/' '{print($NF)}')
 pr_id=$(gh api repos/MarekMichali/btp-manager/pulls/"${pr_number}" | jq -r '.node_id')
 
-# Gopher board node_id MM
-readonly project_board_id=PVT_kwHOA1j9cM4APn2j
-# "To Do" column on Gopher board node_id MM
-readonly todo_column_id=f75ad846
+# Gopher board node_id MM PVT_kwHOA1j9cM4APn2j gop PVT_kwDOAlVvc84AEv0v
+readonly project_board_id=PVT_kwDOAlVvc84AEv0v
+# "To Do" column on Gopher 834c7033 board node_id MM f75ad846
+readonly todo_column_id=834c7033
 # order in "To Do" column on Gopher board node_id
 readonly status_field=PVTSSF_lADOAlVvc84AEv0vzgCvCtY
 
