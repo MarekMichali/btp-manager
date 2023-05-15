@@ -92,4 +92,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          release_id: ${{ needs.create-draft.outputs.RELEASE_ID }}
+          release_id: ${{ steps.create-draft.outputs.RELEASE_ID }}
