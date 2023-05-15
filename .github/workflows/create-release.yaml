@@ -49,15 +49,22 @@ jobs:
 
       - name: Create draft release
         id: create-draft
-        uses: ncipollo/release-action@v1
+        uses: actions/github-script@v6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag: ${{ github.event.inputs.name }}
-          name: Release ${{ github.event.inputs.name }}
-          bodyFile: CHANGELOG.md
-          draft: true
-          prerelease: false
+          script: |
+            const { tag, release_title, body } = context.payload.inputs;
+            const release = await github.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: ${{ github.event.inputs.name }},
+              name: ${{ github.event.inputs.name }},
+              body: CHANGELOG.md,
+              draft: true,
+              prerelease: false,
+            });
+            console.log(`Draft release created: ${release.data.html_url}`);
 
       - name: Create lightweight tag
         run: |
