@@ -54,7 +54,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           script: |
-            const { tag, release_title, body } = context.payload.inputs;
             const release = await github.repos.createRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
