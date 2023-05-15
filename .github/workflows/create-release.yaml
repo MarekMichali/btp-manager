@@ -42,10 +42,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Create changelog
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./scripts/create_changelog.sh ${{ github.event.inputs.name }}
+      #- name: Create changelog
+     #   env:
+    #      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #  run: ./scripts/create_changelog.sh ${{ github.event.inputs.name }}
 
       - name: Create draft release
         id: create-draft
@@ -60,7 +60,7 @@ jobs:
                 repo: context.repo.repo,
                 tag_name: ${{ github.event.inputs.name }},
                 name: ${{ github.event.inputs.name }},
-                body_path: CHANGELOG.md,
+                generate_release_notes: true,
                 draft: true,
                 prerelease: false,
               });
