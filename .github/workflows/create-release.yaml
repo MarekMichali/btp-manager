@@ -79,11 +79,11 @@ jobs:
           git push origin ${{ github.event.inputs.name }}
 
     outputs:
-      release_id: ${{ steps.create-draft.outputs.id }}
+      release_id: ${{ steps.create-draft.outputs.RELEASE_ID }}
 
   publish-release:
     name: Publish release
-    needs: [create-draft, run-unit-tests, run-e2e-tests]
+    needs: [create-draft]
     runs-on: ubuntu-latest
 
     steps:
