@@ -67,7 +67,7 @@ jobs:
               prerelease: false,
             });
             console.log(`Release created: ${release.data.html_url}`);
-
+          github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Create lightweight tag
         run: |
           git tag ${{ github.event.inputs.name }}
