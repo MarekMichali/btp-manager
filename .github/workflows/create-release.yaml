@@ -46,49 +46,17 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./scripts/create_changelog.sh ${{ github.event.inputs.name }}
+
       - name: Create draft release
         id: create-draft
-        uses: actions/github-script@v6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-        # J**aScript
-          script: |
-            const { name, credentials } = context.payload.inputs;
-            const fs = require('fs');
-
-            try {
-              try {
-                bodyFileContent = fs.readFileSync('./CHANGELOG.md', { encoding: 'utf8' });
-              } catch (error) {
-                core.setFailed(error.message);
-              }
-              const response = await github.rest.repos.createRelease({
-                draft: true,
-                name: name,
-                owner: context.repo.owner,
-                prerelease: false,
-                repo: context.repo.repo,
-                tag_name: name,
-                body: bodyFileContent,
-              });
-              const {
-                data: { id: releaseId, html_url: htmlUrl, upload_url: uploadUrl }
-              } = response;
-              core.setOutput('id', releaseId);
-              core.setOutput('html_url', htmlUrl);
-              core.setOutput('upload_url', uploadUrl);
-
-            } catch (error) {
-              core.setFailed(error.message);
-            }
+        run: echo "RELEASE_ID=$(./scripts/create_draft_release.sh ${{ github.event.inputs.name }})" >> $GITHUB_OUTPUT
+        
       - name: Create lightweight tag
         run: |
           git tag ${{ github.event.inputs.name }}
           git push origin ${{ github.event.inputs.name }}
-
-    outputs:
-      release_id: ${{ steps.create-draft.outputs.id }}
 
   publish-release:
     name: Publish release
@@ -101,4 +69,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          release_id: ${{ needs.create-draft.outputs.release_id }}
+          release_id: ${{ needs.create-draft.outputs.RELEASE_ID }}
