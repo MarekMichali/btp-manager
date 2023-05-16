@@ -42,13 +42,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      #- name: Create changelog
-     #   env:
-    #      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #  run: ./scripts/create_changelog.sh ${{ github.event.inputs.name }}
-      - name: "Determine tag"
-        run: "echo \"RELEASE_TAG=${{ github.event.inputs.name }}\" >> $GITHUB_ENV"
-        shell: "bash"
+      - name: Create changelog
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./scripts/create_changelog.sh ${{ github.event.inputs.name }}
       - name: Create draft release
         id: create-draft
         uses: actions/github-script@v6
@@ -57,7 +54,14 @@ jobs:
         with:
           script: |
             const { name, credentials } = context.payload.inputs;
+            const fs = require('fs');
+
             try {
+              try {
+                bodyFileContent = fs.readFileSync(CHANGELOG.md, { encoding: 'utf8' });
+              } catch (error) {
+                core.setFailed(error.message);
+              }
               const response = await github.rest.repos.createRelease({
                 draft: true,
                 generate_release_notes: true,
