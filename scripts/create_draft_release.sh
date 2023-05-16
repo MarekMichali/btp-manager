@@ -8,12 +8,13 @@ set -o errexit  # exit immediately when a command fails.
 set -E          # needs to be set if we want the ERR trap
 set -o pipefail # prevents errors in a pipeline from being masked
 
+RELEASE_TAG=$1
+
 CHANGELOG=$(cat CHANGELOG.md)
 
 JSON_PAYLOAD=$(jq -n \
-  --arg tag_name "v1.0.0" \
-  --arg target_commitish "main" \
-  --arg name "v1.0.0" \
+  --arg tag_name "$RELEASE_TAG" \
+  --arg name "$RELEASE_TAG" \
   --arg body "$CHANGELOG" \
   '{
     "tag_name": $tag_name,
