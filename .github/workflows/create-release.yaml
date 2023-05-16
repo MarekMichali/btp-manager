@@ -67,10 +67,13 @@ jobs:
                 repo: context.repo.repo,
                 tag_name: name,
               });
+              const {
+                data: { id: releaseId, html_url: htmlUrl, upload_url: uploadUrl }
+              } = createReleaseResponse;
+              core.setOutput('id', releaseId);
+              core.setOutput('html_url', htmlUrl);
+              core.setOutput('upload_url', uploadUrl);
 
-              core.exportVariable('RELEASE_ID', response.data.id);
-              core.exportVariable('RELEASE_UPLOAD_URL', response.data.upload_url);
-              core.setOutput('id', response.data.id)
             } catch (error) {
               core.setFailed(error.message);
             }
