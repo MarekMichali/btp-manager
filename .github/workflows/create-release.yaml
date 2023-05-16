@@ -70,6 +70,7 @@ jobs:
 
               core.exportVariable('RELEASE_ID', response.data.id);
               core.exportVariable('RELEASE_UPLOAD_URL', response.data.upload_url);
+              core.setOutput('id', response.data.id)
             } catch (error) {
               core.setFailed(error.message);
             }
@@ -79,7 +80,7 @@ jobs:
           git push origin ${{ github.event.inputs.name }}
 
     outputs:
-      release_id: ${{ steps.create-draft.outputs.RELEASE_ID }}
+      release_id: ${{ steps.create-draft.outputs.id }}
 
   publish-release:
     name: Publish release
@@ -92,4 +93,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          release_id: ${{ steps.create-draft.outputs.RELEASE_ID }}
+          release_id: ${{ needs.create-draft.outputs.id }}
