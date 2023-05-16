@@ -52,6 +52,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+        # J**aScript
           script: |
             const { name, credentials } = context.payload.inputs;
             const fs = require('fs');
