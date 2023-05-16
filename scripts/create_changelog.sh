@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-LATEST_RELEASE=0.4.0 # for testability
+LATEST_RELEASE="" # for testability
 
 # standard bash error handling
 set -o nounset  # treat unset variables as an error and exit immediately.
