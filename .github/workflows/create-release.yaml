@@ -58,7 +58,7 @@ jobs:
 
             try {
               try {
-                bodyFileContent = fs.readFileSync(CHANGELOG.md, { encoding: 'utf8' });
+                bodyFileContent = fs.readFileSync('./CHANGELOG.md', { encoding: 'utf8' });
               } catch (error) {
                 core.setFailed(error.message);
               }
@@ -70,6 +70,7 @@ jobs:
                 prerelease: false,
                 repo: context.repo.repo,
                 tag_name: name,
+                body: bodyFileContent,
               });
               const {
                 data: { id: releaseId, html_url: htmlUrl, upload_url: uploadUrl }
