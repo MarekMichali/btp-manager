@@ -69,7 +69,7 @@ jobs:
               });
               const {
                 data: { id: releaseId, html_url: htmlUrl, upload_url: uploadUrl }
-              } = createReleaseResponse;
+              } = response;
               core.setOutput('id', releaseId);
               core.setOutput('html_url', htmlUrl);
               core.setOutput('upload_url', uploadUrl);
