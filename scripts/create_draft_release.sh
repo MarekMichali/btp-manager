@@ -10,12 +10,15 @@ set -o pipefail # prevents errors in a pipeline from being masked
 
 RELEASE_TAG=$1
 
-CHANGELOG=$(cat CHANGELOG.md)
+REPOSITORY=${REPOSITORY:-MarekMichali/btp-manager}
+GITHUB_URL=https://api.github.com/repos/${REPOSITORY}
+GITHUB_AUTH_HEADER="Authorization: Bearer ${GITHUB_TOKEN}"
+CHANGELOG_FILE=$(cat CHANGELOG.md)
 
 JSON_PAYLOAD=$(jq -n \
   --arg tag_name "$RELEASE_TAG" \
   --arg name "$RELEASE_TAG" \
-  --arg body "$CHANGELOG" \
+  --arg body "$CHANGELOG_FILE" \
   '{
     "tag_name": $tag_name,
     "name": $name,
@@ -26,9 +29,9 @@ JSON_PAYLOAD=$(jq -n \
 CURL_RESPONSE=$(curl -L \
   -X POST \
   -H "Accept: application/vnd.github+json" \
-  -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+  -H "${GITHUB_AUTH_HEADER}" \
   -H "X-GitHub-Api-Version: 2022-11-28" \
-  https://api.github.com/repos/MarekMichali/btp-manager/releases \
+  ${GITHUB_URL}/releases \
   -d "$JSON_PAYLOAD")
 
 echo "$(echo $CURL_RESPONSE | jq -r ".id")"
