@@ -53,14 +53,15 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           RELEASE_ID=$(./scripts/create_draft_release.sh ${{ github.event.inputs.name }})
-          echo "id=$RELEASE_ID" >> $GITHUB_OUTPUT
+          echo "release_id=$RELEASE_ID" >> $GITHUB_OUTPUT
         
       - name: Create lightweight tag
         run: |
           git tag ${{ github.event.inputs.name }}
           git push origin ${{ github.event.inputs.name }}
+
     outputs:
-      release_id: ${{ steps.create-draft.outputs.id }}
+      release_id: ${{ steps.create-draft.outputs.release_id }}
 
   publish-release:
     name: Publish release
