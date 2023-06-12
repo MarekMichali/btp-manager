@@ -21,7 +21,7 @@ JSON_PAYLOAD=$(jq -n \
   --arg body "$CHANGELOG_FILE" \
   '{
     "tag_name": $tag_name,
-    "name": Release $name,
+    "name": 'Release $name',
     "body": $body,
     "draft": true
   }')
