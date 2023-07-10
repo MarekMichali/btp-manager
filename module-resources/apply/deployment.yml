@@ -19,7 +19,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 61c0ecf11af0a3b70ded4277bb83046b04f428257a26817db42b96a4f1128b18
+        checksum/config: 3bd96bd27e0ae7e07c524673e3e6445d7ad9b4b73c1be79675a56a32631edd2a
         sidecar.istio.io/inject: "false"
       labels:
         control-plane: controller-manager
@@ -48,7 +48,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: sap-btp-operator-config
-          image: "ghcr.io/sap/sap-btp-service-operator/controller:v0.4.4"
+          image: "ghcr.io/sap/sap-btp-service-operator/controller:v0.4.8"
           imagePullPolicy: IfNotPresent
           name: manager
           ports:
