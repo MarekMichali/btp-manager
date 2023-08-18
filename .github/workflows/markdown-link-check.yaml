@@ -3,7 +3,7 @@ name: Markdown link check
 on: 
     pull_request:
     schedule:
-        - cron: '* * * * *'
+      - cron: '*/5 * * * * '
 jobs:
   markdown-link-check:
     runs-on: ubuntu-latest
