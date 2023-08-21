@@ -1,0 +1,17 @@
+name: Cache go dependencies
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Cache dependencies
+      uses: actions/setup-go@v4
+      with:
+        go-version-file: 'go.mod'
