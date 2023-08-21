@@ -66,7 +66,7 @@ func GenerateSelfSignedCertificate(expiration time.Time) ([]byte, []byte, error)
 	}); err != nil {
 		return nil, nil, err
 	}
-
+	//asf
 	return newCertificatePem.Bytes(), newCertificatePrivateKeyPem.Bytes(), nil
 }
 
