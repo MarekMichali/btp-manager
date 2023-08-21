@@ -2,6 +2,8 @@ package controllers
 
 import (
 	"fmt"
+
+	"github.com/sirupsen/logrus"
 	admissionregistrationv1 "k8s.io/api/admissionregistration/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/labels"
@@ -15,6 +17,7 @@ func CacheCreator(conf *rest.Config, opts cache.Options) (cache.Cache, error) {
 	if err != nil {
 		panic(fmt.Sprintf("unable to parse label selector: %s", err))
 	}
+	logrus.Debug("sss")
 	objSelector := cache.ObjectSelector{
 		Label: labelSelector,
 	}
