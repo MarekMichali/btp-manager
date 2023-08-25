@@ -18,8 +18,10 @@ package main
 
 import (
 	"flag"
-	btpmanagermetrics "github.com/kyma-project/btp-manager/internal/metrics"
 	"os"
+
+	btpmanagermetrics "github.com/kyma-project/btp-manager/internal/metrics"
+
 	//test
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
@@ -78,7 +80,7 @@ func main() {
 	}
 	opts.BindFlags(flag.CommandLine)
 	flag.Parse()
-
+	//
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
 	restCfg := ctrl.GetConfigOrDie()
