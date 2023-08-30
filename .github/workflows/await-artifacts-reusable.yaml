@@ -27,6 +27,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
+      - name: Wait for artifacts
+        env:
+          BTP_OPERATOR_REPO: ${{ inputs.module-repo }}
+          BTP_MANAGER_REPO: ${{ inputs.image-repo }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: "./scripts/await_artifacts.sh ${{ inputs.image-tag }} ${{ inputs.module-tag }}"
+        
       - name: Wait for post-btp-manager-module-build status
         uses: autotelic/action-wait-for-status-check@6556cf50c8fb6608412945382eae73581f56cbb4
         id: wait-for-module-build-status
@@ -54,10 +61,3 @@ jobs:
         run: |
           echo 'post-btp-manager-build failed.'
           exit 1
-
-      - name: Wait for artifacts
-        env:
-          BTP_OPERATOR_REPO: ${{ inputs.module-repo }}
-          BTP_MANAGER_REPO: ${{ inputs.image-repo }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: "./scripts/await_artifacts.sh ${{ inputs.image-tag }} ${{ inputs.module-tag }}"
