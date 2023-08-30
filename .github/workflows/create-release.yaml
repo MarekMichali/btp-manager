@@ -62,6 +62,9 @@ jobs:
 
       - name: Prepare k3s cluster and docker registry
         run: "./scripts/testing/k3s-setup.sh --wait"
+        
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Wait for jobs
         uses: "./.github/workflows/await-artifacts-reusable.yaml"
