@@ -28,7 +28,18 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-
+      
+      - name: Check if artifacts already exist
+        run: |
+          if $(skopeo list-tags docker://${{ env.MODULE_REPO }} | jq '.Tags|any(. == v${{ github.event.inputs.name }})');
+          then
+            echo 'BTP Operator OCI module image already exist'
+            exit 1
+          if $(skopeo list-tags docker://${{ env.IMAGE_REPO }} | jq '.Tags|any(. == ${{ github.event.inputs.name }})')
+          then
+            echo 'BTP Manager binary image already exist'
+            exit 1
+          echo 'No previous artifacts found'
       - name: Validate Labels
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
