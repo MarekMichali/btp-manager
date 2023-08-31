@@ -24,12 +24,12 @@ export MODULE_TAG=$2
 
 PROTOCOL=docker://
 
-if [ $(skopeo list-tags ${PROTOCOL}${BTP_OPERATOR_REPO} | jq '.Tags|any(. == env.MODULE_TAG)') ]
+if skopeo list-tags ${PROTOCOL}${BTP_OPERATOR_REPO} | jq '.Tags|any(. == env.MODULE_TAG)'
 then
   echo "::warning ::BTP Operator OCI module image for tag ${MODULE_TAG} already exist"
-  fi
+fi
 
-if [ $(skopeo list-tags ${PROTOCOL}${BTP_MANAGER_REPO} | jq '.Tags|any(. == env.IMAGE_TAG)') ]
+if skopeo list-tags ${PROTOCOL}${BTP_MANAGER_REPO} | jq '.Tags|any(. == env.IMAGE_TAG)'
 then
   echo "::warning ::BTP Manager binary image for tag ${IMAGE_TAG} already exist"
 fi
