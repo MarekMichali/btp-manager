@@ -29,7 +29,7 @@ jobs:
         with:
           fetch-depth: 0
       
-      - name: Check for artifacts
+      - name: Check for existing artifacts from previous release runs
         env:
           BTP_OPERATOR_REPO: ${{ env.MODULE_REPO }}
           BTP_MANAGER_REPO: ${{ env.IMAGE_REPO }}
@@ -46,7 +46,7 @@ jobs:
         id: wait-for-module-build-status
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          statusName: "run-unit-tests / build"
+          statusName: "Run unit tests / run-unit-tests / build (push)"
           timeoutSeconds: "300"
 
       - name: Check if post-btp-manager-module-build status is success
