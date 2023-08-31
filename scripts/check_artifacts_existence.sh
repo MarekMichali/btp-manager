@@ -33,7 +33,7 @@ fi
 
 if [ $(skopeo list-tags ${PROTOCOL}${BTP_MANAGER_REPO} | jq '.Tags|any(. == env.IMAGE_TAG)') == "true" ]
 then
-  echo "::warning ::BTP Manager binary image for tag ${MODULE_TAG} already exists"
+  echo "::warning ::BTP Manager binary image for tag ${IMAGE_TAG} already exists"
 else
   echo "No previous BTP Manager binary image found for tag ${IMAGE_TAG}"
 fi
