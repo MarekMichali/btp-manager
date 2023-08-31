@@ -46,7 +46,7 @@ jobs:
         id: wait-for-module-build-status
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          statusName: "post-btp-manager-module-build"
+          statusName: "run-unit-tests / build"
           timeoutSeconds: "300"
 
       - name: Check if post-btp-manager-module-build status is success
