@@ -77,12 +77,12 @@ jobs:
   
   run-unit-tests:
     name: Unit tests
-    needs: wait-for-prow-jobs
+    needs: create-draft
     uses: "./.github/workflows/run-unit-tests-reusable.yaml"
 
   run-e2e-tests:
     name: E2E tests
-    needs: run-unit-tests
+    needs: wait-for-prow-jobs
     uses: "./.github/workflows/run-e2e-tests-reusable.yaml"
     secrets: inherit
     with:
@@ -140,7 +140,7 @@ jobs:
 
   run-e2e-upgrade-tests:
     name: E2E upgrade tests
-    needs: run-unit-tests
+    needs: wait-for-prow-jobs
     secrets: inherit
     if: ${{ inputs.credentials == 'real' }}
     uses: "./.github/workflows/run-e2e-upgrade-tests-reusable.yaml"
