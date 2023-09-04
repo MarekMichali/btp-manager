@@ -8,7 +8,7 @@ set -E          # needs to be set if we want the ERR trap
 set -o pipefail # prevents errors in a pipeline from being masked
 
 PR_NUMBER=$1
-echo $PR_NUMBER
+echo "w skr $PR_NUMBER"
 timeout 5m bash -c "
   until gh pr view ${PR_NUMBER} --json closed | jq -r '.closed'; do
     echo 'Waiting for PR #${PR_NUMBER} to be merged'
