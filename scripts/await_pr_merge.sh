@@ -7,9 +7,9 @@ set -o errexit  # exit immediately when a command fails.
 set -E          # needs to be set if we want the ERR trap
 set -o pipefail # prevents errors in a pipeline from being masked
 
-PR_NUMBER=$1
+
 
   until  $(gh pr view ${PR_NUMBER} --json closed | jq -r '.closed'); do
-    echo 'Waiting for PR #${PR_NUMBER} to be merged'
+    echo "Waiting for PR-${PR_NUMBER} to be merged"
     sleep 10
   done

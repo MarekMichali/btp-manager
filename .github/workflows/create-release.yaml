@@ -75,10 +75,11 @@ jobs:
             echo "nothing changed, no need to create PR"
           else
             PR_STATUS=$(scripts/create_pr.sh ${{ inputs.name }})
-            PR_NUMBER=$(echo "$PR_STATUS" | tail -n 1)
-            echo "numer $PR_NUMBER"
-            scripts/await_pr_merge.sh "$PR_NUMBER"
-          fi 
+            echo "PR_NUMBER=$(echo "$PR_STATUS" | tail -n 1)" >> $GITHUB_ENV          
+          fi
+          
+      - name: Await for PR merge
+        run: scripts/await_pr_merge.sh
 
   wait-for-prow-jobs:
     name: Wait for prow jobs
