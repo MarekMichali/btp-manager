@@ -79,6 +79,8 @@ jobs:
           fi
           
       - name: Await for PR merge
+        env:
+          GH_TOKEN: ${{ secrets.GH_TEST }}
         run: scripts/await_pr_merge.sh
 
   wait-for-prow-jobs:
