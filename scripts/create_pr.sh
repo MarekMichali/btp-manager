@@ -43,7 +43,5 @@ git push --set-upstream origin ${BRANCH_NAME} -f
 
 #create PR
 pr_link=$(gh pr create -B main --title "Bump sec-scanners-config.yaml to ${TAG}" --body "" | tail -n 1)
-echo "Link for created PR: ${pr_link}"
-
 pr_number=$(echo "$pr_link" | awk -F'/' '{print $NF}')
 echo "$pr_number"
