@@ -38,6 +38,12 @@ jobs:
         with:
           fetch-depth: 0
       
+      - name: Check if tag already exists
+        run: |
+          if [ $(git tag -l ${{ inputs.name }}) ]; then
+            echo "Tag ${{ inputs.name }} already exists"
+            exit 1
+
       - name: Check for existing artifacts from previous release runs
         env:
           BTP_OPERATOR_REPO: ${{ env.MODULE_REPO }}
