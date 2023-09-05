@@ -42,6 +42,7 @@ jobs:
         run: |
           if [ $(git tag -l ${{ inputs.name }}) ]; then
             echo "::error ::Tag ${{ inputs.name }} already exists"
+            exit 1
           fi
 
       - name: Check for existing artifacts from previous release runs
@@ -90,6 +91,7 @@ jobs:
           
       - name: Await PR merge
         if: ${{ inputs.sec-scanners-config }}
+        timeout-minutes: 10
         env:
           GH_TOKEN: ${{ secrets.GH_TEST }}
         run: scripts/await_pr_merge.sh
