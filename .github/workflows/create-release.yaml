@@ -54,7 +54,7 @@ jobs:
     name: Bump sec-scanners-config
     needs: validate-release
     runs-on: ubuntu-latest
-    if: ${{ inputs.sec-scanners-config == true }}
+    if: ${{ inputs.sec-scanners-config }}
 
     steps:
       - name: Checkout code
