@@ -54,18 +54,20 @@ jobs:
     name: Bump sec-scanners-config
     needs: validate-release
     runs-on: ubuntu-latest
-    if: ${{ inputs.sec-scanners-config }}
 
     steps:
       - name: Checkout code
+        if: ${{ inputs.sec-scanners-config }}
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
       - name: Update sec-scanners-config.yaml
+        if: ${{ inputs.sec-scanners-config }}
         run: scripts/create_scan_config.sh ${{ inputs.name }} 
 
       - name: Create PR if anything changed
+        if: ${{ inputs.sec-scanners-config }}
         env:
           GH_TOKEN: ${{ secrets.GH_TEST }}
         run: |
@@ -81,6 +83,7 @@ jobs:
           fi
           
       - name: Await PR merge
+        if: ${{ inputs.sec-scanners-config }}
         env:
           GH_TOKEN: ${{ secrets.GH_TEST }}
         run: scripts/await_pr_merge.sh
