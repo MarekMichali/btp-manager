@@ -96,7 +96,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TEST }}
         run: | 
-          if $PR_NUMBER > 0; then
+          if [ "$PR_NUMBER" -gt 0 ]; then
             scripts/await_pr_merge.sh
           else
             echo "Step skipped"
