@@ -42,7 +42,6 @@ jobs:
         run: |
           if [ $(git tag -l ${{ inputs.name }}) ]; then
             echo "::error ::Tag ${{ inputs.name }} already exists"
-            exit 1
           fi
 
       - name: Check for existing artifacts from previous release runs
