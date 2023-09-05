@@ -71,7 +71,7 @@ jobs:
 
       - name: Update sec-scanners-config.yaml
         if: ${{ inputs.sec-scanners-config }}
-        run: scripts/create_scan_config.sh ${{ inputs.name }} 
+        run: scripts/create_scan_config.sh ${{ inputs.name }} "sec-scanners-config.yaml"
 
       - name: Create PR if anything changed
         if: ${{ inputs.sec-scanners-config }}
@@ -85,7 +85,7 @@ jobs:
           elif [ -z "$(git status --porcelain)" ]; then
             echo "nothing changed, no need to create PR"
           else
-            PR_STATUS=$(scripts/create_pr.sh ${{ inputs.name }})
+            PR_STATUS=$(scripts/create_sec_scanner_bump_pr.sh ${{ inputs.name }})
             echo "PR_NUMBER=$(echo "$PR_STATUS" | tail -n 1)" >> $GITHUB_ENV          
           fi
           
