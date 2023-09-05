@@ -91,11 +91,16 @@ jobs:
           fi
           
       - name: Await PR merge
-        if: ${{ inputs.sec-scanners-config }} && ${{ env.PR_NUMBER }} > 0
+        if: ${{ inputs.sec-scanners-config }}
         timeout-minutes: 10
         env:
           GH_TOKEN: ${{ secrets.GH_TEST }}
-        run: scripts/await_pr_merge.sh
+        run: | 
+          if $PR_NUMBER > 0; then
+            scripts/await_pr_merge.sh
+          else
+            echo "Step skipped"
+          fi
 
   wait-for-prow-jobs:
     name: Wait for prow jobs
