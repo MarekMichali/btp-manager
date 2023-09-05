@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# move changes to the dedicated branch created from the remote main and create link on the Gopher dashboard
+# move changes to the dedicated branch created from the remote main
 
 # standard bash error handling
 set -o nounset  # treat unset variables as an error and exit immediately.
@@ -12,9 +12,8 @@ set -o pipefail # prevents errors in a pipeline from being masked
 #   GIT_EMAIL                     - email setting for PR to be created
 #   GIT_NAME                      - user name setting for PR to be created
 #   KYMA_BTP_MANAGER_REPO         - Kyma repository
-#   SAP_BTP_SERVICE_OPERATOR_REPO - upstream repository with new chart versions
-#   BRANCH_NAME                   - branch with updated resources
-#   TAG                           - new chart version
+#   BRANCH_NAME                   - branch with updated sec-scanners-config
+#   TAG                           - release version
 
 TAG=$1
 
