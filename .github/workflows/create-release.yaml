@@ -84,6 +84,7 @@ jobs:
             echo "PR_NUMBER=$(gh pr list --search "base:main head:${{ env.BRANCH_NAME }}" --json number | jq -r '.[] | .number')" >> $GITHUB_ENV
           elif [ -z "$(git status --porcelain)" ]; then
             echo "nothing changed, no need to create PR"
+            echo "PR_NUMBER=-1" >> $GITHUB_ENV
           else
             PR_STATUS=$(scripts/create_sec_scanner_bump_pr.sh ${{ inputs.name }})
             echo "PR_NUMBER=$(echo "$PR_STATUS" | tail -n 1)" >> $GITHUB_ENV          
