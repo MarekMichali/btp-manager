@@ -91,7 +91,7 @@ jobs:
           fi
           
       - name: Await PR merge
-        if: ${{ inputs.sec-scanners-config }} && $PR_NUMBER > 0
+        if: ${{ inputs.sec-scanners-config }} && ${{ env.PR_NUMBER }} > 0
         timeout-minutes: 10
         env:
           GH_TOKEN: ${{ secrets.GH_TEST }}
