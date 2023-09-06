@@ -3,7 +3,9 @@
 # This script has the following arguments:
 #                       binary image reference (mandatory)
 #                       filename of file to be created (optional)
-# ./create_scan_config image temp_scan_config.yaml
+#                       release tag (optional)
+# ./create_scan_config image temp_scan_congitfig.yaml            - use when building module image
+# ./create_scan_config image scan_config_for_main.yaml tag    - use when bumping the config on the main branch
 
 FILENAME=${2-../sec-scanners-config.yaml}
 TAG=${3:-}
