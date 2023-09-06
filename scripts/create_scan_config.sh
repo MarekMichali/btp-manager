@@ -16,7 +16,22 @@ set -o pipefail # prevents errors in a pipeline from being maskedPORT=5001
 
 IMAGE=${1}
 echo "Creating security scan configuration file:"
-cat <<EOF | tee ${FILENAME}
+
+# add rc-tag when creating the config for main
+if [ -n "${TAG}" ]; then
+  cat <<EOF | tee ${FILENAME}
+module-name: btp-operator
+rc-tag: ${TAG}
+protecode:
+  - ${IMAGE}
+whitesource:
+  language: golang-mod
+  subprojects: false
+  exclude:
+    - "**/*_test.go"
+EOF
+else
+  cat <<EOF | tee ${FILENAME}
 module-name: btp-operator
 protecode:
   - ${IMAGE}
@@ -26,8 +41,4 @@ whitesource:
   exclude:
     - "**/*_test.go"
 EOF
-
-# add rc-tag: ${TAG} when creating the config for main
-if [ -n "${TAG}" ]; then
-  sed -i "s/protecode:/rc-tag: ${TAG}\nprotecode:/" "${FILENAME}"
 fi
