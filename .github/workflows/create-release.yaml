@@ -109,7 +109,7 @@ jobs:
           git pull
           LATEST_COMMIT=$(git rev-parse HEAD)
           echo "latest_commit=$LATEST_COMMIT" >> $GITHUB_OUTPUT
-          echo $LATEST_COMMIT
+          echo "Latest commit ref $LATEST_COMMIT"
 
     outputs:
       latest_commit: ${{ steps.pull-ref.outputs.latest_commit }}  
@@ -120,17 +120,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Pull latest commit ref
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          echo 'ref ${{ needs.bump-sec-scanners-config.outputs.latest_commit}}'
-         
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ needs.bump-sec-scanners-config.outputs.latest_commit}}
-
       - name: Wait for post-btp-manager-module-build status
         uses: autotelic/action-wait-for-status-check@6556cf50c8fb6608412945382eae73581f56cbb4
         id: wait-for-module-build-status
@@ -138,6 +127,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           statusName: "post-btp-manager-module-build"
           timeoutSeconds: "300"
+          ref: ${{ needs.bump-sec-scanners-config.outputs.latest_commit}}
 
       - name: Check if post-btp-manager-module-build status is success
         if: steps.wait-for-module-build-status.outputs.state != 'success'
@@ -152,6 +142,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           statusName: "post-btp-manager-build"
           timeoutSeconds: "300"
+          ref: ${{ needs.bump-sec-scanners-config.outputs.latest_commit}}
 
       - name: Check if post-btp-manager-build status is success
         if: steps.wait-for-image-build-status.outputs.state != 'success'
@@ -240,8 +231,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: echo ref
-        run: echo 'ref ${{ needs.bump-sec-scanners-config.outputs.latest_commit }}'
       - name: Checkout code
         uses: actions/checkout@v3
         with:
