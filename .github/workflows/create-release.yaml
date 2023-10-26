@@ -109,7 +109,12 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          
+
+      - name: Pull latest changes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: git pull
+
       - name: Wait for post-btp-manager-module-build status
         uses: autotelic/action-wait-for-status-check@6556cf50c8fb6608412945382eae73581f56cbb4
         id: wait-for-module-build-status
