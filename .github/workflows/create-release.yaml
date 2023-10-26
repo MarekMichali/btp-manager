@@ -107,7 +107,10 @@ jobs:
           git pull
           LATEST_COMMIT=$(git rev-parse HEAD)
           echo "latest_commit=$LATEST_COMMIT" >> $GITHUB_OUTPUT
-          echo 'ref $LATEST_COMMIT'
+          echo $LATEST_COMMIT
+
+    outputs:
+      latest_commit: ${{ steps.bump-sec-scanners-config.outputs.latest_commit }}  
 
   wait-for-prow-jobs:
     name: Wait for prow jobs
