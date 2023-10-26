@@ -72,7 +72,7 @@ jobs:
       - name: Create PR if anything changed
         if: ${{ inputs.sec-scanners-config }}
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN}}
+          GH_TOKEN: ${{ secrets.GH_TEST}}
         run: |
           prs=$(gh pr list -A ${{ env.GIT_NAME }} --state open --json headRefName | jq -r '.[] | .headRefName')
           if echo $prs | tr " " '\n' | grep -F -q -x ${{ env.BRANCH_NAME }}; then
