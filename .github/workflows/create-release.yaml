@@ -105,7 +105,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git pull
-          echo "latest_commit=$(git rev-parse HEAD)" >> $GITHUB_ENV 
+          echo "latest_commit=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
 
   wait-for-prow-jobs:
     name: Wait for prow jobs
@@ -117,12 +117,13 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo 'ref ${{ env.latest_commit }}'
+          echo 'ref  ${{ needs.bump-sec-scanners-config.outputs.latest_commit }}'
+         
       - name: Checkout code
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          ref: ${{ env.latest_commit }}
+          ref:  ${{ needs.bump-sec-scanners-config.outputs.latest_commit }}
 
       - name: Wait for post-btp-manager-module-build status
         uses: autotelic/action-wait-for-status-check@6556cf50c8fb6608412945382eae73581f56cbb4
@@ -239,7 +240,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          ref: ${{ env.latest_commit }}
+          ref:  ${{ needs.bump-sec-scanners-config.outputs.latest_commit }}
 
       - name: Create draft release
         id: create-draft
