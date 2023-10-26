@@ -101,6 +101,7 @@ jobs:
           fi
 
       - name: Pull latest commit ref
+        id: pull-ref
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -110,7 +111,7 @@ jobs:
           echo $LATEST_COMMIT
 
     outputs:
-      latest_commit: ${{ steps.bump-sec-scanners-config.outputs.latest_commit }}  
+      latest_commit: ${{ steps.pull-ref.outputs.latest_commit }}  
 
   wait-for-prow-jobs:
     name: Wait for prow jobs
@@ -240,7 +241,7 @@ jobs:
 
     steps:
       - name: echo ref
-        run: echo 'ref ${{ github.ref }}'
+        run: echo 'ref ${{ needs.bump-sec-scanners-config.outputs.latest_commit }}'
       - name: Checkout code
         uses: actions/checkout@v3
         with:
