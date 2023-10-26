@@ -52,10 +52,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: "./scripts/check_artifacts_existence.sh ${{ inputs.name }} v${{ inputs.name }}"
 
-      - name: Validate Labels
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./scripts/label_validator.sh "RELEASE"
   
   bump-sec-scanners-config:
     name: Bump sec-scanners-config
