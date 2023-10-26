@@ -105,7 +105,9 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git pull
-          echo "latest_commit=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+          LATEST_COMMIT=$(git rev-parse HEAD)
+          echo "latest_commit=$LATEST_COMMIT" >> $GITHUB_OUTPUT
+          echo 'ref $LATEST_COMMIT'
 
   wait-for-prow-jobs:
     name: Wait for prow jobs
