@@ -110,10 +110,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Pull latest changes
+      - name: Pull latest commit ref
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: git pull
+        run: |
+          git pull
+          echo "latest_commit=$(git rev-parse HEAD)" >> $GITHUB_ENV
 
       - name: Wait for post-btp-manager-module-build status
         uses: autotelic/action-wait-for-status-check@6556cf50c8fb6608412945382eae73581f56cbb4
@@ -122,6 +124,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           statusName: "post-btp-manager-module-build"
           timeoutSeconds: "300"
+          ref: $latest_commit
 
       - name: Check if post-btp-manager-module-build status is success
         if: steps.wait-for-module-build-status.outputs.state != 'success'
@@ -136,6 +139,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           statusName: "post-btp-manager-build"
           timeoutSeconds: "300"
+          ref: $latest_commit
 
       - name: Check if post-btp-manager-build status is success
         if: steps.wait-for-image-build-status.outputs.state != 'success'
