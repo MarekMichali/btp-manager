@@ -2,7 +2,7 @@
 # Source: sap-btp-operator/templates/configmap.yml
 apiVersion: v1
 data:
-  CLUSTER_ID: 9afdb5a7-98a8-48bd-8cf5-e67e00aac88d
+  CLUSTER_ID: fe246c63-edd2-4748-8538-d67d356cfbc3
   MANAGEMENT_NAMESPACE: kyma-system
   RELEASE_NAMESPACE: kyma-system
   ALLOW_CLUSTER_ACCESS: "true"
