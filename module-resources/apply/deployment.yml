@@ -19,7 +19,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: dffdcd4cd5783893bd821f7ad87f78c48d5a7bed2cfef22da21dfa9f751e6c19
+        checksum/config: fc8b147e2489795c700d6dc4e5eb899e780859595035502ddf1fb811f3a6655e
         sidecar.istio.io/inject: "false"
       labels:
         control-plane: controller-manager
@@ -43,12 +43,16 @@ spec:
               name: https
         - args:
             - --metrics-addr=127.0.0.1:8080
+            - --logger_use_dev_mode=true
           command:
             - /manager
           envFrom:
             - configMapRef:
                 name: sap-btp-operator-config
-          image: "ghcr.io/sap/sap-btp-service-operator/controller:v0.6.0"
+            - secretRef:
+                name: sap-btp-operator-clusterid
+                optional: true
+          image: "ghcr.io/sap/sap-btp-service-operator/controller:v0.6.5"
           imagePullPolicy: IfNotPresent
           name: manager
           ports:
