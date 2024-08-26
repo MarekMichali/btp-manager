@@ -1,12 +1,15 @@
 ---
 # Source: sap-btp-operator/templates/configmap.yml
 apiVersion: v1
-data:
-  CLUSTER_ID: 61d93183-34bd-4241-b3be-251cfd05d451
-  MANAGEMENT_NAMESPACE: kyma-system
-  RELEASE_NAMESPACE: kyma-system
-  ALLOW_CLUSTER_ACCESS: "true"
 kind: ConfigMap
 metadata:
   name: sap-btp-operator-config
   namespace: kyma-system
+  labels:
+    "services.cloud.sap.com/managed-by-sap-btp-operator": "true"
+data:
+  CLUSTER_ID: 75e2d237-8258-46e8-bf1f-8e958be525aa
+  MANAGEMENT_NAMESPACE: kyma-system
+  RELEASE_NAMESPACE: kyma-system
+  ENABLE_LIMITED_CACHE: "false"
+  ALLOW_CLUSTER_ACCESS: "true"

@@ -8,13 +8,15 @@ manager:
   req_memory_limit: 20Mi
   req_cpu_limit: 100m
   allow_cluster_access: true
+  enable_limited_cache: false
   allowed_namespaces: []
   replica_count: 2
   enable_leader_election: true
+  logger_use_dev_mode: true
   management_namespace:
   image:
     repository: ghcr.io/sap/sap-btp-service-operator/controller
-    tag: v0.6.0
+    tag: v0.6.6
     sha: ""
   secret:
     b64encoded: false

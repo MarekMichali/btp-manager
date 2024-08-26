@@ -124,6 +124,16 @@ spec:
                   and additional info under single key. Convenient way to store whole
                   binding data in single file when using `volumeMounts`.
                 type: string
+              secretTemplate:
+                description: 'SecretTemplate is a Go template that generates a custom
+                  Kubernetes v1/Secret based on data from the service binding returned
+                  by Service Manager and the instance information. The generated secret
+                  is used instead of the default secret. This is useful if the consumer
+                  of service binding data expects them in a specific format. For Go
+                  templates see https://pkg.go.dev/text/template. For supported funcs
+                  see: https://pkg.go.dev/text/template#hdr-Functions, https://masterminds.github.io/sprig/'
+                type: string
+                x-kubernetes-preserve-unknown-fields: true
               serviceInstanceName:
                 description: The k8s name of the service instance to bind, should
                   be in the namespace of the binding
@@ -152,6 +162,7 @@ spec:
                     items:
                       type: string
                     type: array
+                    x-kubernetes-list-type: atomic
                   uid:
                     description: A unique value that identifies this user across time.
                       If this user is deleted and another user by the same name is
@@ -407,6 +418,7 @@ spec:
                     items:
                       type: string
                     type: array
+                    x-kubernetes-list-type: atomic
                   uid:
                     description: A unique value that identifies this user across time.
                       If this user is deleted and another user by the same name is
@@ -677,6 +689,7 @@ spec:
                     items:
                       type: string
                     type: array
+                    x-kubernetes-list-type: atomic
                   uid:
                     description: A unique value that identifies this user across time.
                       If this user is deleted and another user by the same name is
@@ -924,6 +937,7 @@ spec:
                     items:
                       type: string
                     type: array
+                    x-kubernetes-list-type: atomic
                   uid:
                     description: A unique value that identifies this user across time.
                       If this user is deleted and another user by the same name is
