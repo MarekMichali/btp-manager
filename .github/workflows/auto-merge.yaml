@@ -7,14 +7,15 @@ on:
     - opened
     - reopened
     - ready_for_review
+    - synchronize
 
-#as
+#a
 jobs:
   dependabot:
     runs-on: ubuntu-latest
     steps:
       - name: Enable auto-merge for PRs
-        run: gh pr merge --auto --merge "$PR_URL"
+        run: gh pr merge --auto --squash "$PR_URL"
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
           GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
