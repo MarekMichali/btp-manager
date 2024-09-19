@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Enable auto-merge for PRs
-        run: gh pr merge --auto --merge "$PR_URL"
+        run: gh pr merge --auto --merge "$PR_URL" --squash
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
           GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
