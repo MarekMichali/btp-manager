@@ -46,7 +46,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          body=$(awk 'BEGIN{p=0}/^---/{p++}p==2{next}p>=2' "${{ steps.template_local.outputs.template_file }}")
+          body=$(awk 'BEGIN{p=0}/^---/{p++}p>1' "${{ steps.template_local.outputs.template_file }}" | sed '/^---$/d')
           gh issue create \
             --title "${{ github.event.inputs.issue_title }}" \
             --body "$body" \
