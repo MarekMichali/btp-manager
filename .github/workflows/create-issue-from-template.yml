@@ -20,6 +20,30 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3
 
+      - name: Download logs from latest workflow run by workflow name and title
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          workflow_title_filter="Create release ${{ github.event.inputs.issue_title }}"
+          workflow_id=$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            "/repos/${GITHUB_REPOSITORY}/actions/workflows" | jq -r '.workflows[] | select(.name == "Create release") | .id')
+          if [ -z "$workflow_id" ] || [ "$workflow_id" = "null" ]; then
+            echo "Relase workflow not found."
+            exit 1
+          fi
+          run_id=$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            "/repos/${GITHUB_REPOSITORY}/actions/workflows/${workflow_id}/runs" | jq -r '.workflow_runs[] | select(.display_title | test($workflow_title_filter; "i")) | .id' | head -n 1)
+          if [ -z "$run_id" ] || [ "$run_id" = "null" ]; then
+            echo "No runs found for workflow: Create release with title filter: $workflow_title_filter"
+            exit 1
+          fi
+          gh api \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "/repos/${GITHUB_REPOSITORY}/actions/runs/${run_id}/logs" > logs.zip
+
       # Use only local templates
       - name: Set up issue template
         id: template_local
