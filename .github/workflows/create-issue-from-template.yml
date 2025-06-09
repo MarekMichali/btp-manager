@@ -1,0 +1,94 @@
+name: Create Issue from Template
+
+on:
+  workflow_dispatch:
+    inputs:
+      issue_template:
+        description: 'Issue template to use (bug-report, feature-request, documentation-improvement, etc.)'
+        required: true
+        default: 'bug-report'
+      issue_title:
+        description: 'Title of the issue'
+        required: true
+      target_repo:
+        description: 'Target repository to create the issue in'
+        required: true
+
+jobs:
+  create-issue:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Check out target repository
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ github.event.inputs.target_repo }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: target-repo
+
+      - name: Set up issue template from target repo
+        id: template
+        run: |
+          case "${{ github.event.inputs.issue_template }}" in
+            bug-report)
+              template_file="target-repo/.github/ISSUE_TEMPLATE/bug-report.md";;
+            feature-request)
+              template_file="target-repo/.github/ISSUE_TEMPLATE/feature-request.md";;
+            documentation-improvement)
+              template_file="target-repo/.github/ISSUE_TEMPLATE/documentation-improvement.md";;
+            security-vulnerability)
+              template_file="target-repo/.github/ISSUE_TEMPLATE/security-vulnerability.md";;
+            decision-record)
+              template_file="target-repo/.github/ISSUE_TEMPLATE/decision-record.md";;
+            new-sig-or-wg-proposal)
+              template_file="target-repo/.github/ISSUE_TEMPLATE/new-sig-or-wg-proposal.md";;
+            *)
+              echo "Unknown template: ${{ github.event.inputs.issue_template }}"; exit 1;;
+          esac
+          echo "template_file=$template_file" >> $GITHUB_OUTPUT
+
+      # Use local template if target_repo is the current repo
+      - name: Set up issue template (local)
+        if: ${{ github.event.inputs.target_repo == github.repository }}
+        id: template_local
+        run: |
+          case "${{ github.event.inputs.issue_template }}" in
+            bug-report)
+              template_file=".github/ISSUE_TEMPLATE/bug-report.md";;
+            feature-request)
+              template_file=".github/ISSUE_TEMPLATE/feature-request.md";;
+            documentation-improvement)
+              template_file=".github/ISSUE_TEMPLATE/documentation-improvement.md";;
+            security-vulnerability)
+              template_file=".github/ISSUE_TEMPLATE/security-vulnerability.md";;
+            decision-record)
+              template_file=".github/ISSUE_TEMPLATE/decision-record.md";;
+            new-sig-or-wg-proposal)
+              template_file=".github/ISSUE_TEMPLATE/new-sig-or-wg-proposal.md";;
+            *)
+              echo "Unknown template: ${{ github.event.inputs.issue_template }}"; exit 1;;
+          esac
+          echo "template_file=$template_file" >> $GITHUB_OUTPUT
+
+      - name: Create issue in default repo using GitHub CLI
+        if: ${{ github.event.inputs.target_repo == github.repository }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          body=$(awk 'BEGIN{p=0}/^---/{p++}p>=2' "${{ steps.template_local.outputs.template_file }}")
+          gh issue create \
+            --title "${{ github.event.inputs.issue_title }}" \
+            --body "$body" \
+            --repo "$GITHUB_REPOSITORY"
+
+      - name: Create issue in target repo using GitHub CLI
+        if: ${{ github.event.inputs.target_repo != github.repository }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          body=$(awk 'BEGIN{p=0}/^---/{p++}p>=2' "${{ steps.template.outputs.template_file }}")
+          gh issue create \
+            --title "${{ github.event.inputs.issue_title }}" \
+            --body "$body" \
+            --repo "${{ github.event.inputs.target_repo }}"
