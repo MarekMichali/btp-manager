@@ -68,5 +68,7 @@ jobs:
           if [ "$GITHUB_RUN_ATTEMPT" -gt 1 ]; then
             echo "::error ::Reruns are not allowed" && exit 1
           fi
-      - name: Echo OK
-        run: echo "ok"
+      - name: Fail step
+        run: |
+          echo "::error ::This step is intended to fail"
+          exit 1
