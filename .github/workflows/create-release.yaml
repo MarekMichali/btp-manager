@@ -44,12 +44,14 @@ jobs:
       - name: Fail on reruns, allow only first run
         run: |
           if [ "$GITHUB_RUN_ATTEMPT" -gt 1 ]; then
-            echo "::error ::Reruns are not allowed" && exit 1
+          echo "::error ::Reruns are not allowed" && exit 1
           fi
+      - name: Print GITHUB_RETENTION_DAYS
+        run: echo "GITHUB_RETENTION_DAYS=${GITHUB_RETENTION_DAYS}"
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+            fetch-depth: 0
       
       - name: Check if tag already exists
         run: |
