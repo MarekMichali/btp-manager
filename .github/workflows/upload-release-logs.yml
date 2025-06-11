@@ -1,6 +1,8 @@
 name: Upload Release Logs as Assets
 
 on:
+  release:
+    types: [released]
   workflow_dispatch:
     inputs:
       version:
@@ -21,13 +23,13 @@ jobs:
       - name: Download logs from all attempts
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./scripts/download_workflow_logs.sh "Create release" "Create release ${{ github.event.inputs.version }}"
+        run: ./scripts/download_workflow_logs.sh "Create release" "Create release ${{ github.event.inputs.version || github.event.release.tag_name }}"
 
       - name: Upload logs as release assets
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           for file in logs_attempt_*.zip; do
-            echo "Uploading $file to release ${{ github.event.inputs.version }}..."
-            gh release upload ${{ github.event.inputs.version }} "$file" --repo "$GITHUB_REPOSITORY" --clobber
+            echo "Uploading $file to release ${{ github.event.inputs.version || github.event.release.tag_name }}..."
+            gh release upload ${{ github.event.inputs.version || github.event.release.tag_name }} "$file" --repo "$GITHUB_REPOSITORY" --clobber
           done
