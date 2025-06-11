@@ -34,14 +34,14 @@ jobs:
           fi
           run_id=$(gh api \
             -H "Accept: application/vnd.github+json" \
-            "/repos/${GITHUB_REPOSITORY}/actions/workflows/${workflow_id}/runs" | jq -r '.workflow_runs[] | select(.display_title | test($workflow_title_filter; "i")) | .id' | head -n 1)
+            "/repos/${GITHUB_REPOSITORY}/actions/workflows/${workflow_id}/runs" | jq -r --arg workflow_title_filter "$workflow_title_filter" '.workflow_runs[] | select(.display_title | test($workflow_title_filter; "i")) | .id' | head -n 1)
           if [ -z "$run_id" ] || [ "$run_id" = "null" ]; then
             echo "No runs found for workflow: Create release with title filter: $workflow_title_filter"
             exit 1
           fi
           attempts=$(gh api \
             -H "Accept: application/vnd.github+json" \
-            "/repos/${GITHUB_REPOSITORY}/actions/runs/15418414782" | jq -r '.run_attempt')
+            "/repos/${GITHUB_REPOSITORY}/actions/runs/${run_id}" | jq -r '.run_attempt')
           if [ -z "$attempts" ] || [ "$attempts" = "null" ]; then
             echo "Attempts not found."
             exit 1
