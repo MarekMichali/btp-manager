@@ -36,45 +36,6 @@ on:
         default: false
 
 jobs:
-  validate-release:
-    name: Validate release
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Fail on reruns, allow only first run
-        run: |
-          if [ "$GITHUB_RUN_ATTEMPT" -gt 1 ]; then
-          echo "::error ::Reruns are not allowed" && exit 1
-          fi
-      - name: Print GITHUB_RETENTION_DAYS
-        run: echo "GITHUB_RETENTION_DAYS=${GITHUB_RETENTION_DAYS}"
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-            fetch-depth: 0
-      
-      - name: Check if tag already exists
-        run: |
-          if [ $(git tag -l ${{ inputs.name }}) ]; then
-            echo "::error ::Tag ${{ inputs.name }} already exists" && exit 1
-          fi
-
-  echo-ok:
-    name: Echo OK
-    runs-on: ubuntu-latest
-    needs: validate-release
-
-    steps:
-      - name: Fail on reruns, allow only first run
-        run: |
-          if [ "$GITHUB_RUN_ATTEMPT" -gt 1 ]; then
-            echo "::error ::Reruns are not allowed" && exit 1
-          fi
-      - name: Fail step
-        run: |
-          echo "::error ::This step is intended to fail"
-          exit 1
-
   create-draft-release:
     name: Create Draft Release
     runs-on: ubuntu-latest
