@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       issues: write
+      contents: write
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -27,7 +28,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           for file in logs_attempt_*.zip; do
-            echo "Uploading $file to release $version..."
+            echo "Uploading $file to release ${{ github.event.inputs.version }}..."
             gh release upload ${{ github.event.inputs.version }} "$file" --repo "$GITHUB_REPOSITORY" --clobber
           done
 
