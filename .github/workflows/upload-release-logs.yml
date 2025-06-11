@@ -1,4 +1,4 @@
-name: Create Issue from Template
+name: Upload Release Logs as Assets
 
 on:
   workflow_dispatch:
@@ -31,4 +31,3 @@ jobs:
             echo "Uploading $file to release ${{ github.event.inputs.version }}..."
             gh release upload ${{ github.event.inputs.version }} "$file" --repo "$GITHUB_REPOSITORY" --clobber
           done
-
