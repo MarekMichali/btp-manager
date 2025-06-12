@@ -1,11 +1,11 @@
-name: Upload Release Logs as Assets
-
+name: "Upload release logs as assets"
+run-name: Upload release ${{ github.event.release.tag_name }} logs as assets
 on:
   release:
     types: [released]
 
 jobs:
-  create-issue:
+  upload-release-logs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
