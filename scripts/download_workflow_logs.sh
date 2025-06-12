@@ -15,11 +15,6 @@ fi
 
 WORKFLOW_NAME="$1"
 WORKFLOW_TITLE="$2"
-GH_TOKEN="${GH_TOKEN:-}" # Use env var if set, else expect gh to be authenticated
-
-if [ -z "$GH_TOKEN" ]; then
-  echo "Warning: GH_TOKEN not set. Make sure 'gh' is authenticated."
-fi
 
 REPO="${GITHUB_REPOSITORY:-$(gh repo view --json nameWithOwner -q .nameWithOwner)}"
 
