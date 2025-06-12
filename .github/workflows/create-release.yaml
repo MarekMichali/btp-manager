@@ -58,3 +58,5 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_PAT }}
         run: |
           gh release edit "${{ inputs.name }}" --draft=false --repo "$GITHUB_REPOSITORY"
+      - name: Wait for 1 minute
+        run: sleep 60
