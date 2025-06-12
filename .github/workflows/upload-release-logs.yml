@@ -3,12 +3,6 @@ name: Upload Release Logs as Assets
 on:
   release:
     types: [released]
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Release version'
-        required: true
-        type: number
 
 jobs:
   create-issue:
@@ -27,7 +21,7 @@ jobs:
         run: |
           echo "Checking if a 'Create release' workflow is in progress..."
           while true; do
-            IN_PROGRESS=$(gh run list --workflow "Create release" --json status -L 1 --jq '.[] | select(.status == "in_progress" or .status == "queued") | .status')
+            IN_PROGRESS=$(gh run list --workflow "Create release" --json status -L 1 --jq '.[] | select(.status == "in_progress") | .status')
             if [ -z "$IN_PROGRESS" ]; then
               echo "No 'Create release' workflow in progress."
               break
@@ -39,13 +33,13 @@ jobs:
       - name: Download logs from all attempts
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./scripts/download_workflow_logs.sh "Create release" "Create release ${{ github.event.inputs.version || github.event.release.tag_name }}"
+        run: ./scripts/download_workflow_logs.sh "Create release" "Create release ${{ github.event.release.tag_name }}"
 
       - name: Upload logs as release assets
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           for file in logs_attempt_*.zip; do
-            echo "Uploading $file to release ${{ github.event.inputs.version || github.event.release.tag_name }}..."
-            gh release upload ${{ github.event.inputs.version || github.event.release.tag_name }} "$file" --repo "$GITHUB_REPOSITORY" --clobber
+            echo "Uploading $file to release ${{ github.event.release.tag_name }}..."
+            gh release upload ${{ github.event.release.tag_name }} "$file" --repo "$GITHUB_REPOSITORY" --clobber
           done
