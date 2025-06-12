@@ -20,23 +20,21 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Wait for 'Create release' workflow to finish
+      - name: Wait for 'Create release' workflow to finish if in progress
         if: github.event_name == 'release'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SHA: ${{ github.event.release.target_commitish }}
         run: |
-          echo "Debug info:"
-          echo "  target_commitish (SHA): $SHA"
-          echo "Looking for 'Create release' workflow run on commit $SHA..."
-          RUN_ID=$(gh run list --workflow "Create release" --json databaseId,headSha,status -L 5 --jq ".[] | select(.headSha == \"$SHA\") | .databaseId" | head -n1)
-          echo "  run_id: $RUN_ID"
-          if [ -z "$RUN_ID" ]; then
-            echo "No 'Create release' workflow run found on commit $SHA."
-            exit 0
-          fi
-          echo "Waiting for 'Create release' workflow run $RUN_ID to finish..."
-          gh run watch $RUN_ID
+          echo "Checking if a 'Create release' workflow is in progress..."
+          while true; do
+            IN_PROGRESS=$(gh run list --workflow "Create release" --json status -L 1 --jq '.[] | select(.status == "in_progress" or .status == "queued") | .status')
+            if [ -z "$IN_PROGRESS" ]; then
+              echo "No 'Create release' workflow in progress."
+              break
+            fi
+            echo "'Create release' workflow is in progress. Waiting 30 seconds..."
+            sleep 30
+          done
 
       - name: Download logs from all attempts
         env:
