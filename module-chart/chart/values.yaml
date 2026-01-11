@@ -14,9 +14,10 @@ manager:
   enable_leader_election: true
   logger_use_dev_mode: true
   management_namespace:
+  fips: "fips140=on"
   image:
     repository: ghcr.io/sap/sap-btp-service-operator/controller
-    tag: v0.9.3
+    tag: v0.9.8
     sha: ""
   secret:
     b64encoded: false
@@ -85,6 +86,15 @@ manager:
   #securityContext:
   #   runAsNonRoot: true
   securityContext: {}
+  # Example of adding security context for the pod
+  #podSecurityContext:
+  #   runAsUser: 1000
+  #   runAsNonRoot: true
+  #   fsGroup: 1000
+  podSecurityContext: {}
+  # Custom CA certificates for HTTPS connections to SAP BTP
+#  customCACerts:
+#    - "" # base64 encoded PEM
   health_service:
     enabled: false
   kubernetesMatchLabels:
@@ -99,4 +109,3 @@ externalImages:
       tag: latest
 # Option for adding annotations to configmap
 # operator_configmap_annotations: {}
-
