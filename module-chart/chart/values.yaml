@@ -14,9 +14,10 @@ manager:
   enable_leader_election: true
   logger_use_dev_mode: true
   management_namespace:
+  fips: "fips140=on"
   image:
     repository: ghcr.io/sap/sap-btp-service-operator/controller
-    tag: v0.9.3
+    tag: v0.11.11
     sha: ""
   secret:
     b64encoded: false
@@ -31,10 +32,11 @@ manager:
     tokenurlsuffix: "/oauth/token"
 #   annotations: {}
   rbacProxy:
+    enabled: true
     image:
       repository: quay.io/brancz/kube-rbac-proxy
       sha: ""
-      tag: v0.20.0
+      tag: v0.20.2
     memory_limit: ""
     cpu_limit: ""
     req_memory_limit: ""
@@ -47,10 +49,10 @@ manager:
   # output of data will be in form {"auths":{"myhost":{"auth":<encoded username:password>},"myhost1":{"auth":<encoded username:password>}}}
   #    name: registrySecretName
   #    authentication:
-  #      - password: mypwd
+  #      - password: 
   #        username: myuser
   #        host: myhost
-  #      - password: mypwd1
+  #      - password: 
   #        username: myuser1
   #        host: myhost1
   certificates:
@@ -85,6 +87,15 @@ manager:
   #securityContext:
   #   runAsNonRoot: true
   securityContext: {}
+  # Example of adding security context for the pod
+  #podSecurityContext:
+  #   runAsUser: 1000
+  #   runAsNonRoot: true
+  #   fsGroup: 1000
+  podSecurityContext: {}
+  # Custom CA certificates for HTTPS connections to SAP BTP
+#  customCACerts:
+#    - "" # base64 encoded PEM
   health_service:
     enabled: false
   kubernetesMatchLabels:
@@ -99,4 +110,3 @@ externalImages:
       tag: latest
 # Option for adding annotations to configmap
 # operator_configmap_annotations: {}
-
