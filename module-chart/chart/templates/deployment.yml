@@ -35,7 +35,12 @@ spec:
         {{- end }}
     spec:
       serviceAccountName: sap-btp-operator
+      {{- if .Values.manager.podSecurityContext }}
+      securityContext:
+      {{- toYaml .Values.manager.podSecurityContext | nindent 8 }}
+      {{- end }}
       containers:
+        {{- if .Values.manager.rbacProxy.enabled }}
         - args:
             - --secure-listen-address=0.0.0.0:8443
             - --upstream=http://127.0.0.1:8080/
@@ -72,14 +77,22 @@ spec:
           ports:
             - containerPort: 8443
               name: https
+        {{- end }}
         - args:
+            {{- if .Values.manager.rbacProxy.enabled }}
             - --metrics-addr=127.0.0.1:8080
+            {{- end }}
             {{- if .Values.manager.enable_leader_election }}
             - --enable-leader-election
             {{- end}}
             - --logger_use_dev_mode={{.Values.manager.logger_use_dev_mode}}
           command:
             - /manager
+          env:
+            - name: APP_VERSION
+              value: "{{ .Chart.AppVersion }}"
+            - name: GODEBUG
+              value: "{{ .Values.manager.fips }}"
           envFrom:
             - configMapRef:
                 name: sap-btp-operator-config
@@ -103,6 +116,11 @@ spec:
             - containerPort: 9443
               name: webhook-server
               protocol: TCP
+            {{- if not .Values.manager.rbacProxy.enabled }}
+            - containerPort: 8080
+              name: metrics
+              protocol: TCP
+            {{- end }}
           livenessProbe:
             httpGet:
               path: /healthz
@@ -126,6 +144,12 @@ spec:
             - mountPath: /tmp/k8s-webhook-server/serving-certs
               name: cert
               readOnly: true
+{{- if .Values.manager.customCACerts }}
+            - mountPath: /etc/ssl/certs/custom-ca-certificates.crt
+              name: custom-ca-certs
+              subPath: ca-certificates.crt
+              readOnly: true
+{{- end }}
     {{- if .Values.manager.imagePullSecrets }}
       imagePullSecrets: {{ toYaml .Values.manager.imagePullSecrets | nindent 8 }}
     {{- end }}
@@ -138,6 +162,12 @@ spec:
           secret:
             defaultMode: 420
             secretName: webhook-server-cert
+{{- if .Values.manager.customCACerts }}
+        - name: custom-ca-certs
+          secret:
+            secretName: custom-ca-certs
+            defaultMode: 420
+{{- end }}
       {{- if .Values.manager.nodeSelector }}
       nodeSelector: {{ toYaml .Values.manager.nodeSelector | nindent 8 }}
       {{- end }}
